@@ -12,7 +12,7 @@ archives:
 zookeeper:
   conf:
     tick_time: 2000
-    init_time: 20
+    init_limit: 30
     sync_limit: 5
     client_port: 2181
     data_dir: /var/lib/zookeeper
@@ -21,8 +21,11 @@ zookeeper:
       first: 2888
       lead: 3888
   vm1:
+    id: '1'
     ip: "{{ vm1_ip }}"
   vm2:
+    id: '2'
     ip: "{{ vm2_ip }}"
   vm3:
+    id: '3'
     ip: "{{ vm3_ip }}"

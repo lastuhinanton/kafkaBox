@@ -29,7 +29,13 @@
   shell: |
     source /home/{{ machine }}/.bashrc
 
-- name: Create directory
+- name: Create data directory
   file:
     path: "{{ zookeeper.conf.data_dir }}"
     state: directory
+
+- name: Create myid file
+  copy:
+    dest: "{{ zookeeper.conf.data_dir }}/myid"
+    content: |
+      {{ zookeeper[machine].id }}
