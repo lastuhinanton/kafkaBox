@@ -1,0 +1,7 @@
+---
+- name: Setup the Kafka
+  hosts: yandexCloud
+  tasks:
+    - name: Set Up Kafka
+      import_role:
+        name: setup

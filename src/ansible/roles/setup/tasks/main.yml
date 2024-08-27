@@ -1,0 +1,6 @@
+---
+- name: Ping the hosts
+  ping:
+
+- name: Setup the jdk
+  include_task: java.yml
