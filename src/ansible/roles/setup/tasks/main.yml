@@ -1,6 +1,6 @@
 ---
-- name: Ping the hosts
-  ping:
+- name: Setup the JDK
+  include_tasks: java.yml
 
-- name: Setup the jdk
-  include_task: java.yml
+- name: Setup the ZooKeeper
+  include_tasks: zookeeper.yml

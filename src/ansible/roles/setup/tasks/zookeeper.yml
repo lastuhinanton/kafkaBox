@@ -1,0 +1,35 @@
+---
+- name: Install zookeeper
+  get_url:
+    url: "{{ archives.zookeeper.url }}"
+    dest: /tmp/zookeeper.tar.gz
+
+- name: Unarchive a zookeeper
+  unarchive:
+    src: /tmp/zookeeper.tar.gz
+    dest: /tmp
+    remote_src: yes
+
+- name: Move zookeeper files
+  shell: |
+    rm -rf /usr/local/zookeeper
+    mv /tmp/{{ archives.zookeeper.archdir }} /usr/local/zookeeper
+
+- name: Move Config File
+  copy:
+    content: "{{ lookup('template', 'templates/zookeeper/zoo.cfg') }}"
+    dest: /usr/local/zookeeper/conf/zoo.cfg
+
+- name: Put .bashrc file
+  copy:
+    content: "{{ lookup('template', 'templates/base/bashrc') }}"
+    dest: "/home/{{ machine }}/.bashrc"
+
+- name: Source .bashrc
+  shell: |
+    source /home/{{ machine }}/.bashrc
+
+- name: Create directory
+  file:
+    path: "{{ zookeeper.conf.data_dir }}"
+    state: directory

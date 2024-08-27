@@ -2,10 +2,10 @@ yandexCloud:
   hosts:
     vm1:
       ansible_user: vm1
-      ansible_host: 89.169.150.235
+      ansible_host: "{{ vm1_ip }}"
     vm2:
       ansible_user: vm2
-      ansible_host: 89.169.175.207
+      ansible_host: "{{ vm2_ip }}"
     vm3:
       ansible_user: vm3
-      ansible_host: 84.201.150.225
+      ansible_host: "{{ vm3_ip }}"

@@ -1,7 +1,8 @@
 ---
 - name: Setup the Kafka
-  hosts: yandexCloud
+  hosts: "{{ machine }}"
+  become: true
   tasks:
     - name: Set Up Kafka
-      import_role:
+      include_role:
         name: setup
