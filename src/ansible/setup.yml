@@ -3,6 +3,12 @@
   hosts: "{{ machine }}"
   become: true
   tasks:
-    - name: Set Up Kafka
+    - name: Set Up Environment
       include_role:
-        name: setup
+        name: env_setup
+      when: task == "env_setup"
+
+    - name: Set Up Environment
+      include_role:
+        name: zookeeper
+      when: task == "zookeeper"

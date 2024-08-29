@@ -1,4 +1,4 @@
-yandexCloud:
+machines:
   hosts:
     vm1:
       ansible_user: vm1

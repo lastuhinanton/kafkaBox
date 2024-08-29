@@ -1,0 +1,13 @@
+---
+- name: Remove .bashrc
+  shell: |
+    rm -rf /home/{{ machine }}/.bashrc
+
+- name: Setup .bashrc file
+  copy:
+    content: "{{ lookup('template', 'templates/env_setup/bashrc') }}"
+    dest: "/home/{{ machine }}/.bashrc"
+
+- name: Source .bashrc
+  shell: |
+    source /home/{{ machine }}/.bashrc

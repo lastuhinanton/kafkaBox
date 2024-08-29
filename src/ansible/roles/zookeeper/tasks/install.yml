@@ -1,0 +1,11 @@
+---
+- name: Install zookeeper
+  get_url:
+    url: "{{ archives.zookeeper[zookeeper_version].url }}"
+    dest: /tmp/zookeeper.tar.gz
+
+- name: Unarchive a zookeeper
+  unarchive:
+    src: /tmp/zookeeper.tar.gz
+    dest: /tmp
+    remote_src: yes

@@ -1,0 +1,9 @@
+---
+- name: Install ZooKeeper
+  include_tasks: install.yml
+
+- name: Setup ZooKeeper
+  include_tasks: setup.yml
+
+- name: Run ZooKeeper
+  include_tasks: run.yml

@@ -1,0 +1,26 @@
+---
+- name: Setup distributive directory
+  shell: |
+    rm -rf {{ zookeeper.conf.dist_dir }}
+    mv /tmp/{{ archives.zookeeper[zookeeper_version].arch_dir }} {{ zookeeper.conf.dist_dir }}
+
+- name: Create data directory
+  file:
+    path: "{{ zookeeper.conf.data_dir }}"
+    state: directory
+
+- name: Create myid file
+  copy:
+    dest: "{{ zookeeper.conf.data_dir }}/myid"
+    content: |
+      {{ zookeeper[machine].id }}
+
+- name: Setup Config File zoo.cfg
+  copy:
+    content: "{{ lookup('file', '{{ files_path.zoo_cfg }}') }}\n"
+    dest: "{{ zookeeper.conf.dist_dir }}/conf/zoo.cfg"
+
+- name: Update "{{ zookeeper.conf.dist_dir }}/conf/zoo.cfg"
+  shell: |
+    echo 'server.{{ zookeeper[item].id }}={{ "0.0.0.0" if item == machine else zookeeper[item].ip }}:{{ zookeeper.conf.ports.first }}:{{ zookeeper.conf.ports.lead }}' >> {{ zookeeper.conf.dist_dir }}/conf/zoo.cfg
+  loop: "{{ zookeeper.machines }}"

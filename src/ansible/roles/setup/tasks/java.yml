@@ -1,5 +1,0 @@
----
-- name: Install the jdk package
-  dnf:
-    name: "{{ packages.jdk.fedora }}"
-    state: present

@@ -1,0 +1,6 @@
+---
+- name: Install JDK
+  include_tasks: jdk.yml
+
+- name: Setup environment
+  include_tasks: setup.yml
