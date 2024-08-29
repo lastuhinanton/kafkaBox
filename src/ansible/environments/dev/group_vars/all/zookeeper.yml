@@ -1,9 +1,6 @@
 ---
 zookeeper:
   conf:
-    tick_time: 2000
-    init_limit: 30
-    sync_limit: 5
     data_dir: /var/lib/zookeeper
     dist_dir: /usr/local/zookeeper
     ports:
