@@ -1,0 +1,22 @@
+---
+zookeeper:
+  conf:
+    data_dir: /var/lib/zookeeper
+    dist_dir: /usr/local/zookeeper
+    ports:
+      client: 2181
+      first: 2888
+      lead: 3888
+  machines:
+    - vm1
+    - vm2
+    - vm3
+  vm1:
+    id: '1'
+    ip: "{{ vm1_ip }}"
+  vm2:
+    id: '2'
+    ip: "{{ vm2_ip }}"
+  vm3:
+    id: '3'
+    ip: "{{ vm3_ip }}"

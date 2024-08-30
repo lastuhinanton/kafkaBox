@@ -26,4 +26,4 @@ fi
 
 unset rc
 
-export JAVA_HOME={{ packages.jdk.path }}
+export JAVA_HOME={{ jdk[os][jdk_version].path }}

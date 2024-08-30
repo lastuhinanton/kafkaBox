@@ -1,0 +1,6 @@
+---
+- name: Install JDK
+  dnf:
+    name: "{{ jdk[os][jdk_version].package }}"
+    state: present
+  when: packet_manager == 'dnf'

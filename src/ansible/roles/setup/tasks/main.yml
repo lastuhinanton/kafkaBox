@@ -1,6 +1,0 @@
----
-- name: Setup the JDK
-  include_tasks: java.yml
-
-- name: Setup the ZooKeeper
-  include_tasks: zookeeper.yml
