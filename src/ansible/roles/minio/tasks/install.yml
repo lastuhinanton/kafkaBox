@@ -1,0 +1,13 @@
+--- 
+
+- name: Pull image minio
+  docker_image_pull:
+    name: bitnami/minio
+    tag: latest
+
+- name: Install image
+  docker_container_exec:
+    image: bitnami/minio:latest
+    state: started
+    restart_policy: always
+    ports: "9011:9011"
