@@ -1,0 +1,6 @@
+---
+- name: "[Kafka]: Run broker"
+  shell: |
+    {{ kafka_server_stop }} -daemon {{ kafka_broker_config_path }}/server.properties
+    sleep 5
+    {{ kafka_server_start }} -daemon {{ kafka_broker_config_path }}/server.properties

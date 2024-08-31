@@ -1,14 +1,20 @@
 ---
-- name: Setup the Kafka
+- name: KafkaBox
   hosts: "{{ machine }}"
   become: true
   tasks:
+
     - name: Set Up Environment
       include_role:
         name: env_setup
       when: task == "env_setup"
 
-    - name: Set Up Environment
+    - name: Set Up ZooKeeper
       include_role:
         name: zookeeper
       when: task == "zookeeper"
+
+    - name: Set Up Kafka
+      include_role:
+        name: kafka
+      when: task == "kafka"
