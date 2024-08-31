@@ -1,2 +1,3 @@
 ---
 # defaults file for kafka
+service_name : kafka.service
