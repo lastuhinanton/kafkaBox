@@ -2,7 +2,7 @@
 
 - name: Install Kafka's archive
   get_url:
-    url: "{{ archives.kafka[kafka_version].url }}"
+    url: "{{ kafka_arch_url }}"
     dest: /tmp/kafka.tar.gz
 
 - name: Unarchive Kafka
@@ -10,4 +10,3 @@
     src: /tmp/kafka.tar.gz
     dest: /tmp
     remote_src: yes
-
