@@ -1,1 +1,10 @@
-minio-playbook.yml
+---
+- name: Install Minio
+  hosts: "{{ machine }}"
+  become: yes
+  backup: yes
+  tasks:
+    - name: Minio
+      include_role:
+        name: minio
+      tag: minio
