@@ -4,9 +4,6 @@
   become: true
   backup: yes
   tasks:
-    - name: Kafka prepare
-      import_tasks: prepare.yml
-      backup: yes
     - name: Set Up Environment
       include_role:
         name: env_setup

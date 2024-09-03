@@ -1,8 +1,0 @@
----
-
-- name: Backup kafka service
-  copy:
-    src: "/systemd/system/kafka.service"
-    dst: "/systemd/system/kafka{{ ansible_date_time.iso8601_micro }}.service"
-    backup: yes
-    remote_src: yes
