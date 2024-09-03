@@ -2,7 +2,6 @@
 - name: KafkaBox
   hosts: "{{ machine }}"
   become: true
-  backup: yes
   tasks:
     - name: Set Up Environment
       include_role:
