@@ -1,1 +1,2 @@
 src/ansible/run_ansible.sh
+src/creds.yml
