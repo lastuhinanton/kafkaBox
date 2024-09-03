@@ -1,0 +1,16 @@
+---
+- name: Install Kafka
+  include_tasks: install.yml
+  when: kafka_task in ['install_kafka']
+
+- name: Set Up Brokers 
+  include_tasks: setup_brokers.yml
+  when: kafka_task in ['install_kafka', 'setup_broker']
+
+- name: Set Up Topics
+  include_tasks: setup_brokers.yml
+  when: kafka_task in ['setup_topic']
+
+- name: Run
+  include_tasks: run.yml
+  when: kafka_task in ['run_broker', 'setup_broker']

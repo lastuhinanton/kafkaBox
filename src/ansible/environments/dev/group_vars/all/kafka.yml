@@ -1,0 +1,6 @@
+---
+kafka:
+  conf:
+    data_dir: /tmp/kafka-logs
+    dist_dir: /usr/local/kafka
+    backup_dir: /data/backup

@@ -1,6 +1,0 @@
----
-archives:
-  zookeeper:
-    ver_3_8_4_bin:
-      url: https://dlcdn.apache.org/zookeeper/zookeeper-3.8.4/apache-zookeeper-3.8.4-bin.tar.gz
-      arch_dir: apache-zookeeper-3.8.4-bin
