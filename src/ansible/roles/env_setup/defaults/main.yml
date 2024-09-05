@@ -1,6 +1,7 @@
 ---
-jdk:
-  fedora:
-    java_17_openjdk:
-      package: java-17-openjdk.x86_64
-      path: /usr/lib/jvm/java-17-openjdk-17.0.5.0.8-2.fc35.x86_64/bin/java
+osystem: '{{ stand_machines[machine].osystem }}' 
+packet_manager: '{{ stand_machines[machine].packet_manager }}'
+
+jdk_package: '{{ jdk.osystems[osystem][jdk_version].package }}'
+jdk_path: '{{ jdk.osystems[osystem][jdk_version].path }}'
+

@@ -1,20 +1,22 @@
 ---
-- name: KafkaBox
-  hosts: "{{ machine }}"
+- hosts: kafkaBox
   become: true
-  backup: yes
   tasks:
+    - name: Test using python ansible
+      debug:
+        msg: "{{ stand }}"
+
     - name: Set Up Environment
       include_role:
         name: env_setup
-      when: task == "env_setup"
+      when: project_task == "env_setup"
 
     - name: Set Up ZooKeeper
       include_role:
         name: zookeeper
-      when: task == "zookeeper"
+      when: project_task == "zookeeper"
 
     - name: Set Up Kafka
       include_role:
         name: kafka
-      when: task == "kafka"
+      when: project_task == "kafka"

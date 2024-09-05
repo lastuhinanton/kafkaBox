@@ -1,5 +1,7 @@
 ---
 zookeeper:
+  files_path:
+    zoo_cfg: "environments/{{ stand }}/zookeeper/zoo.cfg"
   conf:
     data_dir: /var/lib/zookeeper
     dist_dir: /usr/local/zookeeper
@@ -7,16 +9,7 @@ zookeeper:
       client: 2181
       first: 2888
       lead: 3888
-  machines:
-    - vm1
-    - vm2
-    - vm3
-  vm1:
-    id: '1'
-    ip: "{{ vm1_ip }}"
-  vm2:
-    id: '2'
-    ip: "{{ vm2_ip }}"
-  vm3:
-    id: '3'
-    ip: "{{ vm3_ip }}"
+  versions:
+    ver_3_8_4:
+      arch_url: https://dlcdn.apache.org/zookeeper/zookeeper-3.8.4/apache-zookeeper-3.8.4-bin.tar.gz
+      arch_dir: apache-zookeeper-3.8.4-bin

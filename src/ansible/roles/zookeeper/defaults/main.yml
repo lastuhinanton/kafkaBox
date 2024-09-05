@@ -1,9 +1,15 @@
----
-archives:
-  zookeeper:
-    ver_3_8_4_bin:
-      url: https://dlcdn.apache.org/zookeeper/zookeeper-3.8.4/apache-zookeeper-3.8.4-bin.tar.gz
-      arch_dir: apache-zookeeper-3.8.4-bin
- 
-files_path:
-  zoo_cfg: "environments/{{ stand }}/zookeeper/zoo.cfg"
+--- 
+
+list_machines: '{{ stand_machines.list }}'
+
+zoo_cfg_path: '{{ zookeeper.files_path.zoo_cfg }}'
+
+zookeeper_arch_url: '{{ zookeeper.versions[zookeeper_version].arch_url }}'
+zookeeper_arch_dir: '/tmp/{{ zookeeper.versions[zookeeper_version].arch_dir }}'
+
+zookeper_dist_dir: '{{ zookeeper.conf.dist_dir }}'
+zookeper_data_dir: '{{ zookeeper.conf.data_dir }}'
+
+zookeeper_client_port: '{{ zookeeper.conf.ports.client }}'
+zookeeper_first_port: '{{ zookeeper.conf.ports.first }}'
+zookeeper_lead_port: '{{ zookeeper.conf.ports.lead }}'

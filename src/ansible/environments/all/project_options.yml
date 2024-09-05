@@ -1,0 +1,20 @@
+project_tasks:
+  - env_setup
+  - zookeeper
+  - kafka
+
+kafka_tasks:
+  - install_kafka
+  - setup_broker
+  - setup_topic
+  - run_broker
+
+jdk_versions:
+  - java_17_openjdk
+
+kafka_versions:
+  - ver_3_7_1
+
+zookeeper_versions:
+  - ver_3_8_4
+

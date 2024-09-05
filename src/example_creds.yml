@@ -1,0 +1,29 @@
+environments:
+  dev:
+    machines:
+      vm_1:
+        ip: 1.1.1.1
+        user: test1
+        pass: pass1
+      vm_2:
+        ip: 2.2.2.2
+        user: test2
+        pass: pass2
+      vm_3:
+        ip: 3.3.3.3
+        user: test3
+        pass: pass3
+  prod:
+    machines:
+      vm_1:
+        ip: 1.1.1.1
+        user: test1
+        pass: pass1
+      vm_2:
+        ip: 2.2.2.2
+        user: test2
+        pass: pass2
+      vm_3:
+        ip: 3.3.3.3
+        user: test3
+        pass: pass3
