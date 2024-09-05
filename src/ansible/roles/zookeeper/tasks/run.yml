@@ -1,6 +1,6 @@
 ---
 - name: Restart and status zookeper
   shell: |
-    /usr/local/zookeeper/bin/zkServer.sh restart
+    {{ zookeper_dist_dir }}/bin/zkServer.sh restart
     sleep 5s
-    /usr/local/zookeeper/bin/zkServer.sh status
+    {{ zookeper_dist_dir }}/bin/zkServer.sh status

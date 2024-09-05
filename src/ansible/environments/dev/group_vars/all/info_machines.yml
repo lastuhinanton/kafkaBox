@@ -1,0 +1,14 @@
+stand_machines:
+  list:
+    - vm_1
+    - vm_2
+    - vm_3
+  vm_1:
+    osystem: fedora
+    packet_manager: dnf
+  vm_2:
+    osystem: fedora
+    packet_manager: dnf
+  vm_3:
+    osystem: fedora
+    packet_manager: dnf

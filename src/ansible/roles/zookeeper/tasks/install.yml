@@ -1,7 +1,7 @@
 ---
 - name: Install ZooKeeper's archive
   get_url:
-    url: "{{ archives.zookeeper[zookeeper_version].url }}"
+    url: "{{ zookeeper_arch_url }}"
     dest: /tmp/zookeeper.tar.gz
 
 - name: Unarchive a ZooKeeper

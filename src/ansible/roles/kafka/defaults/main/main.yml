@@ -1,16 +1,18 @@
 ---
-kafka_arch_dir: '/tmp/{{ archives.kafka[kafka_version].arch_dir }}'
-kafka_arch_url: '{{ archives.kafka[kafka_version].url }}'
-kafka_data_path: '{{ kafka.conf.data_dir }}'
-kafka_dist_path: '{{ kafka.conf.dist_dir }}'
-kafka_backup_conf_path: '{{ kafka.conf.backup_dir }}/conf'
-kafka_backup_data_path: '{{ kafka.conf.backup_dir }}/data'
+kafka_arch_dir: '/tmp/{{ kafka.versions[kafka_version].arch_dir }}'
+kafka_arch_url: '{{ kafka.versions[kafka_version].arch_url }}'
 
-kafka_server_stop: '{{ kafka_dist_path }}/bin/kafka-server-stop.sh'
-kafka_server_start: '{{ kafka_dist_path }}/bin/kafka-server-start.sh'
+kafka_data_dir: '{{ kafka.conf.data_dir }}'
+kafka_dist_dir: '{{ kafka.conf.dist_dir }}'
 
-kafka_broker_config_path: '{{ kafka_dist_path }}/config'
-ansible_broker_config_path: 'environments/{{ stand }}/kafka/broker_conf'
+kafka_backup_conf_dir: '{{ kafka.conf.backup_dir }}/conf'
+kafka_backup_data_dir: '{{ kafka.conf.backup_dir }}/data'
+
+kafka_server_stop: '{{ kafka_dist_dir }}/bin/kafka-server-stop.sh'
+kafka_server_start: '{{ kafka_dist_dir }}/bin/kafka-server-start.sh'
+
+kafka_broker_config_dir: '{{ kafka_dist_dir }}/config'
+ansible_broker_config_dir: 'environments/{{ stand }}/kafka/broker_conf'
 
 broker_config_files:
   - consumer.properties

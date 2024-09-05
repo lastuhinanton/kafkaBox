@@ -1,0 +1,11 @@
+---
+jdk:
+  osystems:
+    fedora:
+      java_17_openjdk:
+        package: java-17-openjdk.x86_64
+        path: /usr/lib/jvm/java-17-openjdk-17.0.5.0.8-2.fc35.x86_64/bin/java
+    ubuntu:
+      java_17_openjdk:
+        package: ---
+        path: ---

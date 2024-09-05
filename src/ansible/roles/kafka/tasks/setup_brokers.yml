@@ -1,38 +1,42 @@
 ---
 - name: "[Kafka]: Setup distributive directory"
   shell: |
-    rm -rf {{ kafka_dist_path }}
-    mv {{ kafka_arch_dir }} {{ kafka_dist_path }}
+    rm -rf {{ kafka_dist_dir }}
+    mv {{ kafka_arch_dir }} {{ kafka_dist_dir }}
   when: kafka_task in ["install_kafka"]
 
 - name: "[Kafka]: Create data directory"
   file:
-    path: "{{ kafka_data_path }}"
+    path: "{{ kafka_data_dir }}"
     state: directory
   when: kafka_task in ["install_kafka"]
 
 - name: "[Kafka]: Create backup conf directory"
   file:
-    path: "{{ kafka_backup_conf_path }}"
+    path: "{{ kafka_backup_conf_dir }}"
     state: directory
   when: kafka_task in ["install_kafka"]
 
 - name: "[Kafka]: Create backup data directory"
   file:
-    path: "{{ kafka_backup_data_path }}"
+    path: "{{ kafka_backup_data_dir }}"
     state: directory
   when: kafka_task in ["install_kafka"]
 
 - name: "[Kafka/Broker]: Backup the broker"
   shell: |
-    tar -cvf {{ kafka_backup_conf_path }}/{{ time }} {{ kafka_broker_config_path }}
-    tar -cvf {{ kafka_backup_data_path }}/{{ time }} {{ kafka_data_path }}
+    tar -cvf {{ kafka_backup_conf_dir }}/{{ time }} {{ kafka_broker_config_dir }}
+    tar -cvf {{ kafka_backup_data_dir }}/{{ time }} {{ kafka_data_dir }}
   when: kafka_task in ["setup_broker"]
 
 - name: "[Kafka/Broker]: Update configuration"
   copy:
-    content: "{{ lookup('file', '{{ ansible_broker_config_path }}/{{ item }}') }}"
-    dest: "{{ kafka_broker_config_path }}/{{ item }}"
+    content: "{{ lookup('file', '{{ ansible_broker_config_dir }}/{{ item }}') }}\n\n"
+    dest: "{{ kafka_broker_config_dir }}/{{ item }}"
     force: true
   loop: '{{ broker_config_files }}'
   when: kafka_task in ["setup_broker"]
+
+- name: Update "{{ zookeper_dist_dir }}/conf/zoo.cfg"
+  shell: |
+    echo 'broker.id={{ machines[machine].id }}' >> {{ kafka_broker_config_dir }}/server.properties
