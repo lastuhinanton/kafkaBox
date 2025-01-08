@@ -1,0 +1,14 @@
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+  children:
+    main:
+      hosts:
+        94.250.248.48:
+          ansible_user: root
+        92.63.193.7:
+          ansible_user: root
+        62.109.30.190:
+          ansible_user: root
+

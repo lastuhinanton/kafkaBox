@@ -1,0 +1,14 @@
+[Unit]
+Description=Bitnami Zookeeper
+
+[Service]
+Restart=always
+ExecStartPre=docker rm -f {{ app_name }} || True
+ExecStart=docker run --rm \
+  {% for arg in docker_arguments %}
+  {{ arg }}
+  {% endfor %}
+ExecStop=docker stop -t 10 {{ app_name }}
+
+[Install]
+WantedBy=multi-user.target

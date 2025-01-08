@@ -1,0 +1,4 @@
+---
+- name: Init the host
+  include_tasks: init_host.yml
+  when: goal == "init_host"

@@ -1,0 +1,6 @@
+app_name: "zookeeper"
+
+docker:
+  image:
+    name: "bitnami/zookeeper"
+    tag: "3.9"

@@ -57,7 +57,7 @@ def push_zookeeper_image(version, rep_name):
     f.write("RUN chmod +x /entrypoint.sh\n")
     f.write('CMD ["/bin/sh", "-c", "/entrypoint.sh && /opt/kafka/bin/zookeeper-server-start.sh /opt/kafka/config/zookeeper.properties"]\n')
   build_dockerfile(app_name, version)
-  push_image(app_name, version, rep_name)
+  #push_image(app_name, version, rep_name)
 
 def create_image():
   answer = "yYyesYESYesyeYEYeyeahYEAHYeah"

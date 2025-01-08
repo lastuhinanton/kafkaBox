@@ -1,0 +1,13 @@
+docker_arguments:
+  - "--memory=1024M \\"
+  - "--memory-swap=1024M \\"   
+  - "-v /bitnami/zookeeper/data:/bitnami/zookeeper/data \\"
+  - "-v /opt/bitnami/zookeeper/conf:/opt/bitnami/zookeeper/conf \\"
+  - "-e ZOO_PORT_NUMBER=2181 \\"
+  - "-e ZOO_4LW_COMMANDS_WHITELIST=srvr,dump \\"
+  - "-e ALLOW_PLAINTEXT_LISTENER=yes \\"
+  - "-e ALLOW_ANONYMOUS_LOGIN=yes \\"
+  - "--name {{ app_name }} \\"
+  - "--net host \\"
+  - "{{ docker.image.name }}:{{ docker.image.tag }}"
+

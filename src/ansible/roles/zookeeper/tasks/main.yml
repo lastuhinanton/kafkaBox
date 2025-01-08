@@ -1,0 +1,8 @@
+---
+- name: Include additional zookeeper variables
+  include_vars:
+    file: "{{ playbook_dir }}/roles/zookeeper/defaults/zookeeper.service.yml"
+
+- name: Test zookeeper's templates
+  include_tasks: test_templates.yml
+  when: goal == "zookeeper_test"

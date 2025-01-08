@@ -1,0 +1,13 @@
+---
+- name: Main kafkaBox playbook
+  hosts: main
+  tasks:
+  - name: Common tasks
+    include_role:
+      name: common
+    when: goal in ['init_host']
+  
+  - name: Zookeeper tasks  
+    include_role:
+      name: zookeeper
+    when: goal in ['zookeeper_test']
