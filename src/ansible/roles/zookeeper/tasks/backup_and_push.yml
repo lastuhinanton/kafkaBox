@@ -1,0 +1,58 @@
+---
+- name: Create a temp directory
+  file:
+    path: /temp
+    state: directory
+    mode: "0777"
+
+- name: "Check and backup {{ filename }} if it exists"
+  block:
+    - name: "Check if the {{ filename }} exists"
+      stat:
+        path: "/etc/systemd/system/{{ filename }}"
+        checksum: sha512
+      register: file_stat
+    
+    - name: "Put temp_{{ filename }}"
+      copy:
+        dest: "/temp/temp_{{ filename }}"
+        content: |
+          {{ lookup('template', 'templates/zookeeper.service.j2') }}
+
+    - name: "Calculate checksum of the temp_{{ filename }}"
+      stat:
+        path: "/temp/temp_{{ filename }}"
+        checksum: sha512
+      register: new_file_stat
+
+    - name: "Create a backup if the {{ filename }} has changed"
+      copy:
+        src: "/etc/systemd/system/{{ filename }}"
+        dest: "/backup/{{ filename }}_{{ '%Y-%m-%dT%H-%M-%S' | strftime }}"
+        remote_src: yes
+      when:
+        - file_stat.stat.exists
+        - file_stat.stat.checksum != new_file_stat.stat.checksum
+     
+    - name: "Remove {{ filename }}"
+      file:
+        path: "/etc/systemd/system/{{ filename }}"
+        state: absent
+      when:
+        - file_stat.stat.exists
+        - file_stat.stat.checksum != new_file_stat.stat.checksum
+    
+    - name: "Copy temp file into the real"
+      copy:
+        src: "/temp/temp_{{ filename }}"
+        dest: "/etc/systemd/system/{{ filename }}"
+        remote_src: yes
+      when:
+        - file_stat.stat.checksum != new_file_stat.stat.checksum
+     
+    - name: "Remove /temp"
+      file:
+        path: "/temp"
+        state: absent
+
+

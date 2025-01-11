@@ -1,5 +1,8 @@
 app_name: "zookeeper"
 
+data_dir: "/bitnami/zookeeper/"
+conf_dir: "/opt/bitnami/zookeeper"
+
 docker:
   image:
     name: "bitnami/zookeeper"

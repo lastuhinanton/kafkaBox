@@ -1,3 +1,5 @@
+filename: "zookeeper.service"
+
 docker_arguments:
   - "--memory=1024M \\"
   - "--memory-swap=1024M \\"   

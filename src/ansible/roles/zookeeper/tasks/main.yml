@@ -1,72 +1,25 @@
 ---
-- name: Add variables
+- name: "Add variables"
   include_vars:
     file: "{{ playbook_dir }}/roles/zookeeper/defaults/zookeeper.service.yml"
 
-- name: Create a directory for backuping
+- name: "Recursively change permissions of a directory"
   file:
-    path: /backup
+    path: "{{ item }}"
     state: directory
+    recurse: yes
     mode: "0777"
+  loop:
+    - "{{ data_dir }}"
+    - "{{ conf_dir }}"
 
-- name: Check and backup zookeeper.service file if it exists
-  block:
-    - name: Check if the zookeeper.service exists
-      stat:
-        path: "/etc/systemd/system/zookeeper.service"
-        checksum: sha512
-      register: file_stat
-    
-    - name: Put temp_zookeeper.service
-      copy:
-        dest: "/etc/systemd/system/temp_zookeeper.service"
-        content: |
-          {{ lookup('template', 'templates/zookeeper.service.j2') }}
+- name: "Backup the {{ filename }} if it will be changed"
+  include_tasks:
+    file: backup_and_push.yml
 
-    #- name: Calculate checksum of the zookeeper.service
-    #  stat:
-    #    path: "/etc/systemd/system/zookeeper.service"
-    #    checksum: sha512
-    #  when: file_stat.stat.exists
-    #  register: current_file_stat
-
-    - name: Calculate checksum of the temp_zookeeper.service
-      stat:
-        path: "/etc/systemd/system/temp_zookeeper.service"
-        checksum: sha512
-      register: new_file_stat
-
-    - name: Create a backup if the file has changed
-      copy:
-        src: "/etc/systemd/system/zookeeper.service"
-        dest: "/backup/zookeeper_service_{{ '%Y-%m-%dT%H-%M-%S' | strftime }}"
-        remote_src: yes
-      when:
-        - file_stat.stat.exists
-        - file_stat.stat.checksum != new_file_stat.stat.checksum
-     
-    - name: Remove zookeeper.service
-      file:
-        path: "/etc/systemd/system/zookeeper.service"
-        state: absent
-      when:
-        - file_stat.stat.exists
-        - file_stat.stat.checksum != new_file_stat.stat.checksum
-     
-    
-    - name: Copy temp file into the real
-      copy:
-        src: "/etc/systemd/system/temp_zookeeper.service"
-        dest: "/etc/systemd/system/zookeeper.service"
-        remote_src: yes
-      when:
-        - file_stat.stat.checksum != new_file_stat.stat.checksum
-     
-     
-    - name: Remove temp_zookeeper.service
-      file:
-        path: "/etc/systemd/system/temp_zookeeper.service"
-        state: absent
-     
-
+- name: "Restarted a {{ filename }}"
+  systemd_service:
+    state: restarted
+    daemon_reload: true
+    name: "{{ filename }}"
 
