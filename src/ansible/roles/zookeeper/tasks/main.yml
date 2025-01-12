@@ -3,6 +3,36 @@
   include_vars:
     file: "{{ playbook_dir }}/roles/zookeeper/defaults/zookeeper.service.yml"
 
+- name: "Create directories"
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    mode: "0777"
+  loop:
+    - "{{ app_data_path }}"
+    - "{{ app_conf_path }}"
+
+- name: "Backup files if those will be changed"
+  include_tasks:
+    file: backup_and_push.yml
+  loop:
+  - name: "{{ app_service }}"
+    path: "{{ app_service_path }}"
+  - name: "{{ app_conf }}"
+    path: "{{ app_conf_path }}"
+
+- name: "Copy /etc/hosts"
+  copy:
+    src: "/etc/hosts"
+    dest: "/etc/hosts"
+
+- name: "Create myid file"
+  copy:
+    content: "{{ inventory_hostname | regex_replace('node', '') }}"
+    dest: "{{ app_data_path }}/myid"
+    mode: "0777"
+
 - name: "Recursively change permissions of a directory"
   file:
     path: "{{ item }}"
@@ -10,16 +40,18 @@
     recurse: yes
     mode: "0777"
   loop:
-    - "{{ data_dir }}"
-    - "{{ conf_dir }}"
+    - "/bitnami"
+    - "/opt/bitnami"
 
-- name: "Backup the {{ filename }} if it will be changed"
-  include_tasks:
-    file: backup_and_push.yml
+- name: "Restarted a {{ app_service }} with {{ delay_between_nodes }} delay"
+  block:
+  - name: "Restarted .service"
+    systemd_service:
+      state: restarted
+      daemon_reload: true
+      name: "{{ app_service }}"
 
-- name: "Restarted a {{ filename }}"
-  systemd_service:
-    state: restarted
-    daemon_reload: true
-    name: "{{ filename }}"
+  - name: "Wait {{ delay_between_nodes }} between nodes"
+    pause:
+      seconds: "{{ delay_between_nodes }}"
 

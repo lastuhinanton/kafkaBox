@@ -1,2 +1,18 @@
 ---
-# defaults file for kafka
+app_name: "kafka"
+
+app_service: "kafka.service"
+app_service_path: "/etc/systemd/system"
+
+app_conf: "server.properties"
+app_log4j: "log4j.properties"
+app_conf_path: "/opt/bitnami/kafka/config"
+
+app_data_path: "/bitnami/kafka/data"
+
+delay_between_nodes: 3
+
+docker:
+  image:
+    name: "bitnami/kafka"
+    tag: "2.7.0"

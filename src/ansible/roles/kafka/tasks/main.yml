@@ -1,2 +1,50 @@
 ---
-# tasks file for kafka
+- name: "Add variables"
+  include_vars:
+   file: "{{ playbook_dir }}/roles/kafka/defaults/kafka.service.yml"
+
+- name: "Create directories"
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0777"
+  loop:
+    - "{{ app_conf_path }}"
+    - "{{ app_data_path }}"
+
+- name: "Backup files if those will be changed"
+  include_tasks:
+    file: backup_and_push.yml
+  loop:
+    - name: "{{ app_service }}"
+      path: "{{ app_service_path }}"
+    - name: "{{ app_conf }}"
+      path: "{{ app_conf_path }}"
+    - name: "{{ app_log4j }}"
+      path: "{{ app_conf_path }}"
+
+- name: "Copy /etc/hosts"
+  copy:
+    src: "/etc/hosts"
+    dest: "/etc/hosts"
+
+- name: "Recursively change permissions of a directory"
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    mode: "0777"
+  loop:
+    - "/bitnami"
+    - "/opt/bitnami"
+
+- name: "Restarted a {{ app_service }}"
+  systemd_service:
+    state: restarted
+    daemon_reload: true
+    name: "{{ app_service }}"
+
+- name: "Wait {{ delay_between_nodes}} between nodes"
+  pause:
+    seconds: "{{ delay_between_nodes }}"
+

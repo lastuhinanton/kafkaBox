@@ -1,14 +1,18 @@
 all:
   hosts:
-    localhost:
-      ansible_connection: local
-  children:
-    main:
-      hosts:
-        94.250.248.48:
-          ansible_user: root
-        92.63.193.7:
-          ansible_user: root
-        62.109.30.190:
-          ansible_user: root
+    node1:
+      ansible_host: node1
+      ansible_user: root
+    node2:
+      ansible_host: node2
+      ansible_user: root
+    node3:
+      ansible_host: node3
+      ansible_user: root
 
+  children:
+    zookeeper:
+      hosts:
+        node1:
+        node2:
+        node3:

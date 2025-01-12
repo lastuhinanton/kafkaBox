@@ -1,9 +1,21 @@
 app_name: "zookeeper"
 
-data_dir: "/bitnami/zookeeper/"
-conf_dir: "/opt/bitnami/zookeeper"
+app_service: "zookeeper.service"
+app_service_path: "/etc/systemd/system"
+
+app_conf: "zoo.cfg"
+app_conf_path: "/opt/bitnami/zookeeper/conf"
+
+app_data_path: "/bitnami/zookeeper/data"
+
+delay_between_nodes: 3
 
 docker:
   image:
     name: "bitnami/zookeeper"
     tag: "3.9"
+
+zk_servers:
+  - "node1"
+  - "node2"
+  - "node3"

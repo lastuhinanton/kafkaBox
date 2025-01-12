@@ -1,0 +1,9 @@
+docker_arguments:
+  - "-e ALLOW_PLAINTEXT_LISTENER=yes \\"
+  - "-v /opt/bitnami/kafka/config:/opt/bitnami/kafka/config \\"
+  - "-v /bitnami/kafka/data:/bitnami/kafka/data \\"
+  - "-v /etc/hosts:/etc/hosts \\"
+  - "--name kafka \\"
+  - "--net host \\"
+  - "bitnami/kafka:2.7.0"
+
