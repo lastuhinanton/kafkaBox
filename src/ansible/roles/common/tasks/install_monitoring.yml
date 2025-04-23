@@ -1,0 +1,70 @@
+---
+- name: Create a directory for vmagent
+  file:
+    path: /opt/vmagent
+    state: directory
+    mode: '0755'
+
+- name: Copy victoriametrics.yml to /opt/vmagent
+  copy:
+    src: victoriametrics.yml
+    dest: /opt/vmagent/victoriametrics.yml
+    mode: '0644'
+
+- name: Create a directory for storing victoriaMetrics data
+  file:
+    path: /opt/victoriametrics-data
+    state: directory
+    mode: '0755'
+
+- name: Create a directory for Grafana
+  file:
+    path: /opt/grafana
+    state: directory
+    mode: '0755'
+
+- name: Run victoriaMetrics (single-node)
+  community.docker.docker_container:
+    name: victoriametrics
+    image: victoriametrics/victoria-metrics
+    state: started
+    recreate: true
+    published_ports:
+      - "8428:8428"
+    volumes:
+      - /opt/victoriametrics-data:/victoria-metrics-data
+      - /etc/hosts:/etc/hosts
+    command: >
+      -storageDataPath=/victoria-metrics-data
+
+- name: Run vmagent
+  community.docker.docker_container:
+    name: vmagent
+    image: victoriametrics/vmagent
+    state: started
+    recreate: true
+    published_ports:
+      - "8429:8429"
+    volumes:
+      - /opt/vmagent/victoriametrics.yml:/opt/vmagent/victoriametrics.yml
+      - /etc/hosts:/etc/hosts
+    command: >
+      -promscrape.config=/opt/vmagent/victoriametrics.yml
+      -remoteWrite.url=http://node4:8428/api/v1/write
+
+- name: Run Grafana
+  community.docker.docker_container:
+    name: grafana
+    image: grafana/grafana
+    state: started
+    recreate: true
+    published_ports:
+      - "3000:3000"
+    volumes:
+      - "/opt/grafana:/opt/grafana"
+    env:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_PATH_DATA: /opt/grafana
+    volumes:
+      - /etc/hosts:/etc/hosts

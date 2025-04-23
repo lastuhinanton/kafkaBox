@@ -9,6 +9,9 @@ all:
     node3:
       ansible_host: node3
       ansible_user: root
+    node4:
+      ansible_host: node4
+      ansible_user: root
 
   children:
     zookeeper:
@@ -16,3 +19,6 @@ all:
         node1:
         node2:
         node3:
+    monitoring:
+      hosts:
+        node4:

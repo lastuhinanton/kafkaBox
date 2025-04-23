@@ -22,3 +22,8 @@
 - name: Install docker
   shell: |
     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+- name: "Copy /etc/hosts"
+  copy:
+    src: "/etc/hosts"
+    dest: "/etc/hosts"

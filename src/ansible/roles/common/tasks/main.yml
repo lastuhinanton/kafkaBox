@@ -2,3 +2,7 @@
 - name: Init the host
   include_tasks: init_host.yml
   when: goal == "init_host"
+
+- name: Install Monitoring
+  include_tasks: install_monitoring.yml
+  when: goal == "install_monitoring"

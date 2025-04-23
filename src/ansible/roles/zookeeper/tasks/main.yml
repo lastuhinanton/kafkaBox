@@ -22,11 +22,6 @@
   - name: "{{ app_conf }}"
     path: "{{ app_conf_path }}"
 
-- name: "Copy /etc/hosts"
-  copy:
-    src: "/etc/hosts"
-    dest: "/etc/hosts"
-
 - name: "Create myid file"
   copy:
     content: "{{ inventory_hostname | regex_replace('node', '') }}"
@@ -43,13 +38,24 @@
     - "/bitnami"
     - "/opt/bitnami"
 
-- name: "Restarted a {{ app_service }} with {{ delay_between_nodes }} delay"
+- name: "Restarted services with {{ delay_between_nodes }} delay"
   block:
   - name: "Restarted .service"
     systemd_service:
       state: restarted
       daemon_reload: true
       name: "{{ app_service }}"
+  - name: "Run zookeeper_exporter"
+    community.docker.docker_container:
+      name: zookeeper-exporter
+      image: dabealu/zookeeper-exporter
+      restart_policy: always
+      published_ports:
+        - "9141:9141"
+      command: >
+        --zk-hosts="localhost:2181"
+        --timeout=5
+    
 
   - name: "Wait {{ delay_between_nodes }} between nodes"
     pause:

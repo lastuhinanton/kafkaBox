@@ -1,19 +1,19 @@
 ---
 - name: "Main kafkaBox playbook"
-  hosts: zookeeper
+  hosts: all
   serial: 1
   tasks:
   - name: "Common tasks"
     include_role:
       name: common
-    when: goal in ['init_host']
+    when: goal in ['init_host', 'install_monitoring']
   
   - name: "Zookeeper tasks"
     include_role:
       name: zookeeper
-    when: goal in ['zookeeper']
+    when: goal in ['install_zookeeper']
 
   - name: "Kafka tasks | Zookeeper version"
     include_role:
       name: kafka
-    when: goal in ['kafka']
+    when: goal in ['kafka_2_1']
