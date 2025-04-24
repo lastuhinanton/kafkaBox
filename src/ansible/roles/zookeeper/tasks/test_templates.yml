@@ -1,6 +1,6 @@
 - name: Test variables
   debug:
-    msg: "{{ docker_arguments }}"
+    msg: "{{ zk_args }}"
 
 - name: Test create zookeeper.service
   copy:

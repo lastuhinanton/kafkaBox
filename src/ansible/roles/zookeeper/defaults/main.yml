@@ -1,19 +1,23 @@
-app_name: "zookeeper"
 
-app_service: "zookeeper.service"
-app_service_path: "/etc/systemd/system"
+etc_hosts_path: 'etc/host'
 
-app_conf: "zoo.cfg"
-app_conf_path: "/opt/bitnami/zookeeper/conf"
+zk_name: 'zookeeper'
 
-app_data_path: "/bitnami/zookeeper/data"
+zk_service: 'zookeeper.service'
+zk_service_path: '/etc/systemd/system'
+
+zk_conf: 'zoo.cfg'
+zk_conf_path: 'opt/bitnami/zookeeper/conf'
+
+zk_data_path: 'bitnami/zookeeper/data'
 
 delay_between_nodes: 3
 
 docker:
   image:
-    name: "bitnami/zookeeper"
-    tag: "3.9"
+    name: 'bitnami/zookeeper'
+    tag: '3.9'
+  network_name: 'host'
 
 zk_servers:
   - "node1"

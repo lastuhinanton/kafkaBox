@@ -3,13 +3,21 @@ Description=Bitnami Zookeeper Test
 
 [Service]
 Restart=always
-ExecStartPre=docker rm -f {{ app_name }} || True
+ExecStartPre=docker rm -f {{ zk_args.container_name }} || True
 ExecStart=docker run --rm \
-  {% for arg in docker_arguments %}
-  {{ arg }}
-  {% endfor %}
+  --memory={{ zk_args.memmory }} \
+  --memory-swap={{ zk_args.memmory_swap }} \
+{% for v_value in zk_args.volumes.values() %}
+  -v {{ v_value }} \
+{% endfor %}
+{% for f_key, f_value in zk_args.flags.items() %}
+  -e {{ f_key }}={{ f_value }} \
+{% endfor %}
+  --name {{ zk_args.container_name }} \
+  --net {{ zk_args.network_name }} \
+  {{ zk_args.image_path }}
 
-ExecStop=docker stop -t 10 {{ app_name }}
+ExecStop=docker stop -t 10 {{ zk_args.container_name }}
 
 [Install]
 WantedBy=multi-user.target

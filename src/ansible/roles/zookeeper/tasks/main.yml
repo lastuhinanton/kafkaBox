@@ -3,61 +3,65 @@
   include_vars:
     file: "{{ playbook_dir }}/roles/zookeeper/defaults/zookeeper.service.yml"
 
-- name: "Create directories"
-  file:
-    path: "{{ item }}"
-    state: directory
-    recurse: yes
-    mode: "0777"
-  loop:
-    - "{{ app_data_path }}"
-    - "{{ app_conf_path }}"
-
-- name: "Backup files if those will be changed"
+- name: 'Test systemd_service'
   include_tasks:
-    file: backup_and_push.yml
-  loop:
-  - name: "{{ app_service }}"
-    path: "{{ app_service_path }}"
-  - name: "{{ app_conf }}"
-    path: "{{ app_conf_path }}"
+    file: 'test_templates.yml'
 
-- name: "Create myid file"
-  copy:
-    content: "{{ inventory_hostname | regex_replace('node', '') }}"
-    dest: "{{ app_data_path }}/myid"
-    mode: "0777"
+# - name: "Create directories"
+#   file:
+#     path: "{{ item }}"
+#     state: directory
+#     recurse: yes
+#     mode: "0777"
+#   loop:
+#     - "{{ app_data_path }}"
+#     - "{{ app_conf_path }}"
 
-- name: "Recursively change permissions of a directory"
-  file:
-    path: "{{ item }}"
-    state: directory
-    recurse: yes
-    mode: "0777"
-  loop:
-    - "/bitnami"
-    - "/opt/bitnami"
+# - name: "Backup files if those will be changed"
+#   include_tasks:
+#     file: backup_and_push.yml
+#   loop:
+#   - name: "{{ app_service }}"
+#     path: "{{ app_service_path }}"
+#   - name: "{{ app_conf }}"
+#     path: "{{ app_conf_path }}"
 
-- name: "Restarted services with {{ delay_between_nodes }} delay"
-  block:
-  - name: "Restarted .service"
-    systemd_service:
-      state: restarted
-      daemon_reload: true
-      name: "{{ app_service }}"
-  - name: "Run zookeeper_exporter"
-    community.docker.docker_container:
-      name: zookeeper-exporter
-      image: dabealu/zookeeper-exporter
-      restart_policy: always
-      published_ports:
-        - "9141:9141"
-      command: >
-        --zk-hosts="localhost:2181"
-        --timeout=5
+# - name: "Create myid file"
+#   copy:
+#     content: "{{ inventory_hostname | regex_replace('node', '') }}"
+#     dest: "{{ app_data_path }}/myid"
+#     mode: "0777"
+
+# - name: "Recursively change permissions of a directory"
+#   file:
+#     path: "{{ item }}"
+#     state: directory
+#     recurse: yes
+#     mode: "0777"
+#   loop:
+#     - "/bitnami"
+#     - "/opt/bitnami"
+
+# - name: "Restarted services with {{ delay_between_nodes }} delay"
+#   block:
+#   - name: "Restarted .service"
+#     systemd_service:
+#       state: restarted
+#       daemon_reload: true
+#       name: "{{ app_service }}"
+#   - name: "Run zookeeper_exporter"
+#     community.docker.docker_container:
+#       name: zookeeper-exporter
+#       image: dabealu/zookeeper-exporter
+#       restart_policy: always
+#       published_ports:
+#         - "9141:9141"
+#       command: >
+#         --zk-hosts="localhost:2181"
+#         --timeout=5
     
 
-  - name: "Wait {{ delay_between_nodes }} between nodes"
-    pause:
-      seconds: "{{ delay_between_nodes }}"
+#   - name: "Wait {{ delay_between_nodes }} between nodes"
+#     pause:
+#       seconds: "{{ delay_between_nodes }}"
 

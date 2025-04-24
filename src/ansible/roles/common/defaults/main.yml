@@ -1,2 +1,46 @@
 ---
-# defaults file for common
+
+monitoring_host: 'node4'
+etc_hosts_path: 'etc/host'
+
+#############################################
+# victoria-metrics ************************ #
+#############################################
+
+vm_image: 'victoriametrics/victoria-metrics'
+vm_image_tag: 'latest'
+
+vm_outside_port: '8428'
+vm_inside_port: '8428'
+
+vm_data_path: 'opt/victoria-metrics-data'
+
+
+#############################################
+# vmagent ********************************* #
+#############################################
+
+vmagent_image: 'victoriametrics/vmagent'
+vmagent_image_tag: 'latest'
+
+vmagent_outside_port: '8429'
+vmagent_inside_port: '8429'
+
+vmagent_config_path: 'opt/vmagent'
+vmagent_config_file: 'vmagent_config.yml'
+
+
+#############################################
+# grafana ********************************* #
+#############################################
+
+grafana_image: 'grafana/grafana'
+grafana_image_tag: 'latest'
+
+grafana_outside_port: '3000'
+grafana_inside_port: '3000'
+
+grafana_data_path: 'opt/grafana-data'
+
+grafana_user: 'admin'
+grafana_password: 'admin'

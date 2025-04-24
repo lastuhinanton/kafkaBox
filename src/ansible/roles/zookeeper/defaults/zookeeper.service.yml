@@ -1,12 +1,14 @@
-docker_arguments:
-  - "--memory=1024M \\"
-  - "--memory-swap=1024M \\"   
-  - "-v /bitnami/zookeeper/data:/bitnami/zookeeper/data \\"
-  - "-v /opt/bitnami/zookeeper/conf:/opt/bitnami/zookeeper/conf \\"
-  - "-v /etc/hosts:/etc/hosts \\"
-  - "-e ALLOW_PLAINTEXT_LISTENER=yes \\"
-  - "-e ALLOW_ANONYMOUS_LOGIN=yes \\"
-  - "--name {{ app_name }} \\"
-  - "--net host \\"
-  - "{{ docker.image.name }}:{{ docker.image.tag }}"
+zk_args:
+  memmory: '1024M'
+  memmory_swap: '1024M'
+  volumes:
+    data_path: '/{{ zk_data_path }}:/{{ zk_data_path }}'
+    conf_path: '/{{ zk_conf_path }}:/{{ zk_conf_path }}'
+    etc_host_path: '{{ etc_hosts_path }}:{{ etc_hosts_path }}'
+  flags:
+    ALLOW_PLAINTEXT_LISTENER: 'yes'
+    ALLOW_ANONYMOUS_LOGIN: 'yes'
+  container_name: '{{ zk_name }}'
+  network_name: '{{ docker.network_name }}'
+  image_path: '{{ docker.image.name }}:{{ docker.image.tag }}'
 
