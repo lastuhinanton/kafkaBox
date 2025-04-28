@@ -18,6 +18,9 @@ zk_backup_path: '/backup'
 
 delay_between_nodes: 3
 
+zk_memmory: '1024M'
+zk_swap: '1024M'
+
 docker:
   image:
     name: 'confluentinc/cp-zookeeper'

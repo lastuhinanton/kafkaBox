@@ -1,6 +1,6 @@
 zk_args:
-  memmory: '1024M'
-  memmory_swap: '1024M'
+  memmory: '{{ zk_memmory }}'
+  memmory_swap: '{{ zk_swap }}'
   volumes:
     zk_data_dir: '/{{ zk_data_dir }}:/{{ zk_data_dir }}'
     zk_log_dir: '/{{ zk_log_dir }}:/{{ zk_log_dir }}'
