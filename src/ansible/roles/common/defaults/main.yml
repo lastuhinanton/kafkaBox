@@ -15,7 +15,7 @@ vm_image_tag: 'latest'
 vm_outside_port: '8428'
 vm_inside_port: '8428'
 
-vm_data_path: 'opt/victoria-metrics-data'
+vm_data_path: '/opt/victoria-metrics-data'
 
 
 #############################################
@@ -42,7 +42,7 @@ grafana_image_tag: 'latest'
 grafana_outside_port: '3000'
 grafana_inside_port: '3000'
 
-grafana_data_path: 'opt/grafana-data'
+grafana_data_path: '/opt/grafana-data'
 
 grafana_user: 'admin'
 grafana_password: 'admin'

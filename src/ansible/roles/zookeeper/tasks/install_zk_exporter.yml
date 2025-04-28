@@ -4,6 +4,7 @@
     name: '{{ zk_exp_name }}'
     image: '{{ zk_exp_image }}:{{ zk_exp_image_tag }}'
     restart_policy: always
+    recreate: true
     published_ports:
       - '{{ zk_exp_outside_port }}:{{ zk_exp_inside_port }}'
     network_mode: '{{ docker.network_mode }}'

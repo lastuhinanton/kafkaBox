@@ -8,7 +8,7 @@
   block:
     - name: 'Create a directory for storing victoriaMetrics data'
       file:
-        path: '/{{ vm_data_path }}'
+        path: '{{ vm_data_path }}'
         state: directory
         mode: '0755'
 
@@ -22,7 +22,7 @@
           - '{{ vm_outside_port }}:{{ vm_inside_port }}'
         volumes:
           - '{{ etc_hosts_path }}:{{ etc_hosts_path }}'
-          - '/{{ vm_data_path }}:/{{ vm_data_path }}'
+          - '{{ vm_data_path }}:{{ vm_data_path }}'
         command: >
           -storageDataPath={{ vm_data_path }}
   when: monitoring in ['victoriametrics', 'all']
@@ -75,7 +75,7 @@
   block:
     - name: Create a directory for Grafana
       file:
-        path: '/{{ grafana_data_path }}'
+        path: '{{ grafana_data_path }}'
         state: directory
         mode: '0755'
 
@@ -88,10 +88,10 @@
         published_ports:
           - '{{ grafana_inside_port }}:{{ grafana_outside_port }}'
         volumes:
-          - '/{{ grafana_data_path }}:/{{ grafana_data_path }}'
+          - '{{ grafana_data_path }}:{{ grafana_data_path }}'
           - '{{ etc_hosts_path }}:{{ etc_hosts_path }}'
         env:
           GF_SECURITY_ADMIN_USER: '{{ grafana_user }}'
           GF_SECURITY_ADMIN_PASSWORD: '{{ grafana_password }}'
-          GF_PATH_DATA: '/{{ grafana_data_path }}'
+          GF_PATH_DATA: '{{ grafana_data_path }}'
   when: monitoring in ['grafana', 'all']

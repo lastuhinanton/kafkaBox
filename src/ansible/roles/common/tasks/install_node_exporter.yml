@@ -5,6 +5,7 @@
     image: '{{ node_exp_image }}:{{ node_exp_image_tag }}'
     state: started
     restart_policy: always
+    recreate: true
     published_ports:
       - '{{ node_exp_outside_port }}:{{ node_exp_inside_port }}'
     command: >
