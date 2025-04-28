@@ -12,7 +12,6 @@
   loop:
     - '{{ zk_data_dir }}'
     - '{{ zk_log_dir }}'
-    - '{{ zk_backup_path }}'
 
 - name: "Backup files if those will be changed"
   include_tasks:

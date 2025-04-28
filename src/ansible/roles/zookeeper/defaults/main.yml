@@ -6,15 +6,14 @@ etc_hosts_path: '/etc/host'
 #############################################
 
 zk_name: 'zookeeper'
-zk_client_port: '9141'
+
+zk_client_port: '2181'
 
 zk_service: 'zookeeper.service'
 zk_service_path: '/etc/systemd/system'
 
 zk_data_dir: '/zookeeper-data'
 zk_log_dir: '/zookeeper-log'
-
-zk_backup_path: '/backup'
 
 delay_between_nodes: 3
 
@@ -25,7 +24,10 @@ docker:
   image:
     name: 'confluentinc/cp-zookeeper'
     tag: '5.3.1'
-  network_name: 'host'
+  ports:
+    zk_inside_port: '2181'
+    zk_outside_port: '2181'
+  network_mode: 'host'
 
 zk_servers:
   one: "node1"

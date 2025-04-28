@@ -34,17 +34,21 @@
 
 - name: 'Vmagent'
   block:
-    - name: 'Create a directory for vmagent'
+    - name: "Create directories"
       file:
-        path: '/{{ vmagent_config_path }}'
+        path: "{{ item }}"
         state: directory
-        mode: '0755'
+        recurse: yes
+        mode: "0777"
+      loop:
+        - '/{{ vmagent_config_path }}'
 
-    - name: 'Copy {{ vmagent_config_file }} to /{{ vmagent_config_path }}'
-      copy:
-        src: '{{ vmagent_config_file }}'
-        dest: '/{{ vmagent_config_path }}/{{ vmagent_config_file }}'
-        mode: '0644'
+    - name: "Backup files if those will be changed"
+      include_tasks:
+        file: backup_and_push.yml
+      loop:
+      - name: "{{ vmagent_config_file }}"
+        path: "{{ vmagent_config_path }}"
 
     - name: 'Run vmagent'
       community.docker.docker_container:

@@ -14,7 +14,8 @@ ExecStart=docker run --rm \
   -e {{ f_key }}={{ f_value }} \
 {% endfor %}
   --name {{ zk_args.container_name }} \
-  --net {{ zk_args.network_name }} \
+  --net {{ zk_args.network_mode }} \
+  -p {{ docker.ports.zk_outside_port }}:{{ docker.ports.zk_inside_port }} \
   {{ zk_args.image_path }}
 
 ExecStop=docker stop -t 10 {{ zk_args.container_name }}

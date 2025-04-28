@@ -3,6 +3,8 @@
 monitoring_host: 'node4'
 etc_hosts_path: '/etc/hosts'
 
+backup_path: '/backup'
+
 #############################################
 # victoria-metrics ************************ #
 #############################################
@@ -26,7 +28,7 @@ vmagent_image_tag: 'latest'
 vmagent_outside_port: '8429'
 vmagent_inside_port: '8429'
 
-vmagent_config_path: 'opt/vmagent'
+vmagent_config_path: '/opt/vmagent'
 vmagent_config_file: 'vmagent_config.yml'
 
 

@@ -6,6 +6,7 @@
     restart_policy: always
     published_ports:
       - '{{ zk_exp_outside_port }}:{{ zk_exp_inside_port }}'
+    network_mode: '{{ docker.network_mode }}'
     command: >
       --zk-hosts='localhost:{{ zk_client_port }}'
       --timeout=5

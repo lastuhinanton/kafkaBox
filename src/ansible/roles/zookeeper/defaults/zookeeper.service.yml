@@ -13,6 +13,6 @@ zk_args:
     ZOOKEEPER_SERVERS: '{{ zk_servers.one }}:2888:3888;{{ zk_servers.two }}:2888:3888;{{ zk_servers.three }}:2888:3888'
 
   container_name: '{{ zk_name }}'
-  network_name: '{{ docker.network_name }}'
+  network_mode: '{{ docker.network_mode }}'
   image_path: '{{ docker.image.name }}:{{ docker.image.tag }}'
 

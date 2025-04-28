@@ -1,0 +1,62 @@
+---
+- name: Create a temp directory
+  file:
+    path: /temp
+    state: directory
+    mode: "0777"
+
+- name: "Check if the {{ item.name }} exists"
+  stat:
+    path: "{{ item.path }}/{{ item.name }}"
+    checksum: sha512
+  register: file_stat
+
+- name: "Put temp_{{ item.name }}"
+  copy:
+    dest: "/temp/temp_{{ item.name }}"
+    content: |
+      {{ lookup('template', 'templates/{{ item.name }}.j2') }}
+
+- name: "Calculate checksum of the temp_{{ item.name }}"
+  stat:
+    path: "/temp/temp_{{ item.name }}"
+    checksum: sha512
+  register: new_file_stat
+
+- name: "Check if the current file exists"
+  block:
+    - name: "Create a backup if the {{ item.name }} has changed"
+      block:
+        - name: "Backup the file"
+          copy:
+            src: "{{ item.path }}/{{ item.name }}"
+            dest: "/backup/{{ item.name }}_{{ '%Y-%m-%dT%H-%M-%S' | strftime }}"
+            remote_src: yes
+
+        - name: "Remove {{ item.name }}"
+          file:
+            path: "{{ item.path }}/{{ item.name }}"
+            state: absent
+        
+        - name: "Copy temp file into the real"
+          copy:
+            src: "/temp/temp_{{ item.name }}"
+            dest: "{{ item.path }}/{{ item.name }}"
+            remote_src: yes
+      when:
+        - file_stat.stat.checksum != new_file_stat.stat.checksum
+  when:
+    - file_stat.stat.exists
+
+- name: "Copy temp file into the real"
+  copy:
+    src: "/temp/temp_{{ item.name }}"
+    dest: "{{ item.path }}/{{ item.name }}"
+    remote_src: yes
+  when: not file_stat.stat.exists
+ 
+- name: "Remove /temp"
+  file:
+    path: "/temp"
+    state: absent
+
