@@ -1,8 +1,0 @@
----
-- name: Install container
-  community.docker.docker_container:
-    name: nginx
-    image: nginx:latest
-    state: started
-    published_ports:
-      - "80:80"

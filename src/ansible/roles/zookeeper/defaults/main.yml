@@ -1,25 +1,44 @@
 
-etc_hosts_path: 'etc/host'
+etc_hosts_path: '/etc/host'
+
+#############################################
+# zookeeper ******************************* #
+#############################################
 
 zk_name: 'zookeeper'
+zk_client_port: '9141'
 
 zk_service: 'zookeeper.service'
 zk_service_path: '/etc/systemd/system'
 
-zk_conf: 'zoo.cfg'
-zk_conf_path: 'opt/bitnami/zookeeper/conf'
+zk_data_dir: '/zookeeper-data'
+zk_log_dir: '/zookeeper-log'
 
-zk_data_path: 'bitnami/zookeeper/data'
+zk_backup_path: '/backup'
 
 delay_between_nodes: 3
 
 docker:
   image:
-    name: 'bitnami/zookeeper'
-    tag: '3.9'
+    name: 'confluentinc/cp-zookeeper'
+    tag: '5.3.1'
   network_name: 'host'
 
 zk_servers:
-  - "node1"
-  - "node2"
-  - "node3"
+  one: "node1"
+  two: "node2"
+  three: "node3"
+
+#############################################
+# zookeeper-exporter ********************** #
+#############################################
+
+zk_exp_name: 'zookeeper-exporter'
+zk_exp_image: 'dabealu/zookeeper-exporter'
+zk_exp_image_tag: 'latest'
+
+zk_exp_inside_port: '9141'
+zk_exp_outside_port: '9141'
+
+
+

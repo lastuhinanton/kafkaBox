@@ -1,8 +1,12 @@
 ---
 - name: Init the host
   include_tasks: init_host.yml
-  when: goal == "init_host"
+  when: goal == 'init_host'
+
+- name: Install Node exporter
+  include_tasks: install_node_exporter.yml
+  when: goal in ['init_host', 'install_node_exporter']
 
 - name: Install Monitoring
   include_tasks: install_monitoring.yml
-  when: goal == "install_monitoring"
+  when: goal in ['install_monitoring'] and monitoring in ['victoriametrics', 'vmagent', 'grafana', 'all']

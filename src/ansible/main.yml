@@ -6,7 +6,7 @@
   - name: "Common tasks"
     include_role:
       name: common
-    when: goal in ['init_host', 'install_monitoring']
+    when: goal in ['init_host', 'install_monitoring', 'install_zk_exporter']
   
   - name: "Zookeeper tasks"
     include_role:

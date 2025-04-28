@@ -1,7 +1,7 @@
 ---
 
 monitoring_host: 'node4'
-etc_hosts_path: 'etc/host'
+etc_hosts_path: '/etc/hosts'
 
 #############################################
 # victoria-metrics ************************ #
@@ -44,3 +44,22 @@ grafana_data_path: 'opt/grafana-data'
 
 grafana_user: 'admin'
 grafana_password: 'admin'
+
+
+#############################################
+# node-exporter *************************** #
+#############################################
+
+node_exp_name: 'node-exporter'
+node_exp_image: 'prom/node-exporter'
+node_exp_image_tag: 'latest'
+
+node_exp_outside_port: '9100'
+node_exp_inside_port: '9100'
+
+
+#############################################
+# zookeeper-exporter ********************** #
+#############################################
+
+zk_port: '9141'

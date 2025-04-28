@@ -4,82 +4,90 @@
 # * victoria_metrics ********************************* #
 ########################################################
 
-- name: 'Create a directory for storing victoriaMetrics data'
-  file:
-    path: '/{{ vm_data_path }}'
-    state: directory
-    mode: '0755'
+- name: 'victoria Metrics'
+  block:
+    - name: 'Create a directory for storing victoriaMetrics data'
+      file:
+        path: '/{{ vm_data_path }}'
+        state: directory
+        mode: '0755'
 
-- name: 'Run victoriaMetrics (single-node)'
-  community.docker.docker_container:
-    name: victoriametrics
-    image: '{{ vm_image }}:{{ vm_image_tag }}'
-    state: started
-    recreate: true
-    published_ports:
-      - '{{ vm_outside_port }}:{{ vm_inside_port }}'
-    volumes:
-      - '{{ etc_hosts_path }}:{{ etc_hosts_path }}'
-      - '/{{ vm_data_path }}:/{{ vm_data_path }}'
-    command: >
-      -storageDataPath={{ vm_data_path }}
+    - name: 'Run victoriaMetrics (single-node)'
+      community.docker.docker_container:
+        name: victoriametrics
+        image: '{{ vm_image }}:{{ vm_image_tag }}'
+        state: started
+        recreate: true
+        published_ports:
+          - '{{ vm_outside_port }}:{{ vm_inside_port }}'
+        volumes:
+          - '{{ etc_hosts_path }}:{{ etc_hosts_path }}'
+          - '/{{ vm_data_path }}:/{{ vm_data_path }}'
+        command: >
+          -storageDataPath={{ vm_data_path }}
+  when: monitoring in ['victoriametrics', 'all']
 
 
 ########################################################
 # * vmagent ****************************************** #
 ########################################################
 
-- name: 'Create a directory for vmagent'
-  file:
-    path: '/{{ vmagent_config_path }}'
-    state: directory
-    mode: '0755'
+- name: 'Vmagent'
+  block:
+    - name: 'Create a directory for vmagent'
+      file:
+        path: '/{{ vmagent_config_path }}'
+        state: directory
+        mode: '0755'
 
-- name: 'Copy {{ vmagent_config_file }} to /{{ vmagent_config_path }}'
-  copy:
-    src: '{{ vmagent_config_file }}'
-    dest: '/{{ vmagent_config_path }}/{{ vmagent_config_file }}'
-    mode: '0644'
+    - name: 'Copy {{ vmagent_config_file }} to /{{ vmagent_config_path }}'
+      copy:
+        src: '{{ vmagent_config_file }}'
+        dest: '/{{ vmagent_config_path }}/{{ vmagent_config_file }}'
+        mode: '0644'
 
-- name: 'Run vmagent'
-  community.docker.docker_container:
-    name: vmagent
-    image: '{{ vmagent_image }}:{{ vmagent_image_tag }}'
-    state: started
-    recreate: true
-    published_ports:
-      - '{{ vmagent_outside_port }}:{{ vmagent_inside_port }}'
-    volumes:
-      - '/{{ etc_hosts_path }}:/{{ etc_hosts_path }}'
-      - '/{{ vmagent_config_path }}/{{ vmagent_config_file }}:/{{ vmagent_config_path }}/{{ vmagent_config_file }}'
-    command: >
-      -promscrape.config=/{{ vmagent_config_path }}/{{ vmagent_config_file }}
-      -remoteWrite.url=http://{{ monitoring_host }}:{{ vm_outside_port }}/api/v1/write
+    - name: 'Run vmagent'
+      community.docker.docker_container:
+        name: vmagent
+        image: '{{ vmagent_image }}:{{ vmagent_image_tag }}'
+        state: started
+        recreate: true
+        published_ports:
+          - '{{ vmagent_outside_port }}:{{ vmagent_inside_port }}'
+        volumes:
+          - '{{ etc_hosts_path }}:{{ etc_hosts_path }}'
+          - '/{{ vmagent_config_path }}/{{ vmagent_config_file }}:/{{ vmagent_config_path }}/{{ vmagent_config_file }}'
+        command: >
+          -promscrape.config=/{{ vmagent_config_path }}/{{ vmagent_config_file }}
+          -remoteWrite.url=http://{{ monitoring_host }}:{{ vm_outside_port }}/api/v1/write
+  when: monitoring in ['vmagent', 'all']
 
 
 ########################################################
 # * grafana ****************************************** #
 ########################################################
 
-- name: Create a directory for Grafana
-  file:
-    path: '/{{ grafana_data_path }}'
-    state: directory
-    mode: '0755'
+- name: Grafana
+  block:
+    - name: Create a directory for Grafana
+      file:
+        path: '/{{ grafana_data_path }}'
+        state: directory
+        mode: '0755'
 
-- name: Run Grafana
-  community.docker.docker_container:
-    name: grafana
-    image: '{{ grafana_image }}:{{ grafana_image_tag }}'
-    state: started
-    recreate: true
-    published_ports:
-      - '{{ grafana_inside_port }}:{{ grafana_outside_port }}'
-    volumes:
-      - '/{{ grafana_data_path }}:/{{ grafana_data_path }}'
-    env:
-      GF_SECURITY_ADMIN_USER: '{{ grafana_user }}'
-      GF_SECURITY_ADMIN_PASSWORD: '{{ grafana_password }}'
-      GF_PATH_DATA: '/{{ grafana_data_path }}'
-    volumes:
-      - '/{{ etc_hosts_path }}:/{{ etc_hosts_path }}'
+    - name: Run Grafana
+      community.docker.docker_container:
+        name: grafana
+        image: '{{ grafana_image }}:{{ grafana_image_tag }}'
+        state: started
+        recreate: true
+        published_ports:
+          - '{{ grafana_inside_port }}:{{ grafana_outside_port }}'
+        volumes:
+          - '/{{ grafana_data_path }}:/{{ grafana_data_path }}'
+          - '{{ etc_hosts_path }}:{{ etc_hosts_path }}'
+        env:
+          GF_SECURITY_ADMIN_USER: '{{ grafana_user }}'
+          GF_SECURITY_ADMIN_PASSWORD: '{{ grafana_password }}'
+          GF_PATH_DATA: '/{{ grafana_data_path }}'
+  when: monitoring in ['grafana', 'all']

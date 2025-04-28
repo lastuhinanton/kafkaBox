@@ -47,14 +47,13 @@
         - file_stat.stat.checksum != new_file_stat.stat.checksum
   when:
     - file_stat.stat.exists
-        
+
 - name: "Copy temp file into the real"
   copy:
     src: "/temp/temp_{{ item.name }}"
     dest: "{{ item.path }}/{{ item.name }}"
     remote_src: yes
   when: not file_stat.stat.exists
-        
  
 - name: "Remove /temp"
   file:

@@ -1,0 +1,11 @@
+---
+- name: 'Run zookeeper_exporter'
+  community.docker.docker_container:
+    name: '{{ zk_exp_name }}'
+    image: '{{ zk_exp_image }}:{{ zk_exp_image_tag }}'
+    restart_policy: always
+    published_ports:
+      - '{{ zk_exp_outside_port }}:{{ zk_exp_inside_port }}'
+    command: >
+      --zk-hosts='localhost:{{ zk_client_port }}'
+      --timeout=5

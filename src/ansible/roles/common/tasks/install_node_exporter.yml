@@ -1,0 +1,11 @@
+---
+- name: 'Run node_exporter'
+  community.docker.docker_container:
+    name: '{{ node_exp_name }}'
+    image: '{{ node_exp_image }}:{{ node_exp_image_tag }}'
+    state: started
+    restart_policy: always
+    published_ports:
+      - '{{ node_exp_outside_port }}:{{ node_exp_inside_port }}'
+    command: >
+      --path.rootfs=/
