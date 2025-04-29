@@ -9,35 +9,20 @@
     state: directory
     mode: "0777"
   loop:
-    - "{{ app_conf_path }}"
-    - "{{ app_data_path }}"
+    - "{{ kafka_log_path }}"
 
 - name: "Backup files if those will be changed"
   include_tasks:
     file: backup_and_push.yml
   loop:
-    - name: "{{ app_service }}"
-      path: "{{ app_service_path }}"
-    - name: "{{ app_conf }}"
-      path: "{{ app_conf_path }}"
-    - name: "{{ app_log4j }}"
-      path: "{{ app_conf_path }}"
+    - name: "{{ kafka_service }}"
+      path: "{{ kafka_service_path }}"
 
-- name: "Recursively change permissions of a directory"
-  file:
-    path: "{{ item }}"
-    state: directory
-    recurse: yes
-    mode: "0777"
-  loop:
-    - "/bitnami"
-    - "/opt/bitnami"
-
-- name: "Restarted a {{ app_service }}"
+- name: "Restarted a {{ kafka_service }}"
   systemd_service:
     state: restarted
     daemon_reload: true
-    name: "{{ app_service }}"
+    name: "{{ kafka_service }}"
 
 - name: "Wait {{ delay_between_nodes}} between nodes"
   pause:

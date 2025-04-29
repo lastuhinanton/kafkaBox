@@ -3,13 +3,22 @@ Description=Bitnami Kafka
 
 [Service]
 Restart=always
-ExecStartPre=docker rm -f {{ app_name }} || True
+ExecStartPre=docker rm -f {{ kafka_args.container_name }} || True
 ExecStart=docker run --rm \
-  {% for arg in docker_arguments %}
-  {{ arg }}
-  {% endfor %}
+  --memory={{ kafka_args.memory }} \
+  --memory-swap={{ kafka_args.swap }} \
+{% for v_value in kafka_args.volumes.values() %}
+  -v {{ v_value }} \
+{% endfor %}
+{% for f_key, f_value in kafka_args.flags.items() %}
+  -e {{ f_key }}={{ f_value }} \
+{% endfor %}
+  --name {{ kafka_args.container_name }} \
+  --net {{ kafka_args.network_mode }} \
+  -p {{ kafka_args.ports.plaintext.advertised.outside }}:{{ kafka_args.ports.plaintext.advertised.inside }} \
+  {{ kafka_args.image.path }}:{{ kafka_args.image.version }}
 
-ExecStop=docker stop -t 10 {{ app_name }}
+ExecStop=docker stop -t 10 {{ kafka_args.container_name }}
 
 [Install]
 WantedBy=multi-user.target

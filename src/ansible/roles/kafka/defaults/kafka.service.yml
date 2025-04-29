@@ -1,9 +1,33 @@
-docker_arguments:
-  - "-e ALLOW_PLAINTEXT_LISTENER=yes \\"
-  - "-v /opt/bitnami/kafka/config:/opt/bitnami/kafka/config \\"
-  - "-v /bitnami/kafka/data:/bitnami/kafka/data \\"
-  - "-v /etc/hosts:/etc/hosts \\"
-  - "--name kafka \\"
-  - "--net host \\"
-  - "bitnami/kafka:2.7.0"
+kafka_args:
+  container_name: '{{ docker.container_name }}'
+  memory: '{{ kafka_memory }}'
+  swap: '{{ kafka_swap }}'
+  volumes:
+    kafka_log_path: '{{ kafka_log_path }}:{{ kafka_log_path }}'
+    etc_hosts: '{{ etc_hosts_path }}:{{ etc_hosts_path }}'
+  flags:
+    KAFKA_BROKER_ID: "{{ kafka_broker_id }}"
+    KAFKA_LOG_DIRS: '{{ kafka_log_path }}'
+    KAFKA_LISTENERS: '{{ kafka_listeners }}'
+    KAFKA_ADVERTISED_LISTENERS: '{{ kafka_advertised_listeners }}'
+    KAFKA_ZOOKEEPER_CONNECT: '{{ kafka_zookeeper_connect }}'
+  network_mode: '{{ docker.network_mode }}'
+  image:
+    path: '{{ docker.image.path }}'
+    version: '{{ docker.image.version }}'
+  ports:
+    plaintext:
+      advertised:
+        outside: '{{ ports.plaintext.advertised.outside }}'
+        inside: '{{ ports.plaintext.advertised.inside }}'
+
+
+# docker_arguments:
+#   - "-e ALLOW_PLAINTEXT_LISTENER=yes \\"
+#   - "-v /opt/bitnami/kafka/config:/opt/bitnami/kafka/config \\"
+#   - "-v /bitnami/kafka/data:/bitnami/kafka/data \\"
+#   - "-v /etc/hosts:/etc/hosts \\"
+#   - "--name kafka \\"
+#   - "--net host \\"
+#   - "bitnami/kafka:2.7.0"
 

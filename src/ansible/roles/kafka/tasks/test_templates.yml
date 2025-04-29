@@ -1,0 +1,9 @@
+- name: Test variables
+  debug:
+    msg: "{{ kafka_args }}"
+
+- name: Test create kafka.service
+  copy:
+    dest: "/kafka.service"
+    content: |
+      {{ lookup('template', 'templates/kafka.service.j2') }}

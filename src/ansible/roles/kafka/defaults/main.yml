@@ -1,18 +1,40 @@
 ---
-app_name: "kafka"
 
-app_service: "kafka.service"
-app_service_path: "/etc/systemd/system"
+etc_hosts_path: '/etc/hosts'
 
-app_conf: "server.properties"
-app_log4j: "log4j.properties"
-app_conf_path: "/opt/bitnami/kafka/config"
+#############################################
+# kafka *********************************** #
+#############################################
 
-app_data_path: "/bitnami/kafka/data"
+kafka_broker_id: "{{ inventory_hostname | regex_replace('node', '') }}"
+
+kafka_memory: '700M'
+kafka_swap: '700M'
+
+ports:
+  plaintext:
+    advertised:
+      outside: '9092'
+      inside: '9092'
+
+kafka_service: "kafka.service"
+kafka_service_path: "/etc/systemd/system"
+
+kafka_log_path: '/var/lib/kafka/data'
+
+kafka_listeners: 'PLAINTEXT://:9092'
+kafka_advertised_listeners: 'PLAINTEXT://{{ inventory_hostname }}:9092' # Узнать подробнее про это поле
+kafka_zookeeper_connect: '{{ inventory_hostname }}:2181'
 
 delay_between_nodes: 3
 
 docker:
+  container_name: 'kafka'
   image:
-    name: "bitnami/kafka"
-    tag: "2.7.0"
+    path: "confluentinc/cp-kafka"
+    version: "5.3.1"
+  network_mode: 'host'
+
+#############################################
+# kafka-exporter ************************** #
+#############################################
