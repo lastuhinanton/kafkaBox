@@ -9,22 +9,26 @@
     state: directory
     mode: "0777"
   loop:
-    - "{{ kafka_log_path }}"
+    - "{{ kafka.log_path }}"
 
 - name: "Backup files if those will be changed"
   include_tasks:
     file: backup_and_push.yml
   loop:
-    - name: "{{ kafka_service }}"
-      path: "{{ kafka_service_path }}"
+    - name: "{{ kafka.systemd_service.name }}"
+      path: "{{ kafka.systemd_service.path }}"
 
-- name: "Restarted a {{ kafka_service }}"
-  systemd_service:
-    state: restarted
-    daemon_reload: true
-    name: "{{ kafka_service }}"
-
-- name: "Wait {{ delay_between_nodes}} between nodes"
-  pause:
-    seconds: "{{ delay_between_nodes }}"
+- name: 'Restarted services with {{ delay_between_nodes }}s delay'
+  block:
+    - name: "Restarted a {{ kafka.systemd_service.name }}"
+      systemd_service:
+        state: restarted
+        daemon_reload: true
+        name: "{{ kafka.systemd_service.name }}"
+    - name: 'Run kafka_exporter'
+      include_tasks:
+        file: 'install_kafka_exporter.yml'
+    - name: "Wait {{ delay_between_nodes}} between nodes"
+      pause:
+        seconds: "{{ delay_between_nodes }}"
 

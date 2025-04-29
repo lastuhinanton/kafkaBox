@@ -1,0 +1,15 @@
+---
+- name: 'Run kafka_exporter'
+  community.docker.docker_container:
+    name: '{{ kafka_exp.docker.container_name }}'
+    image: '{{ kafka_exp.docker.image.path }}:{{ kafka_exp.docker.image.version }}'
+    restart_policy: always
+    recreate: true
+    published_ports:
+      - '{{ kafka_exp.ports.plain.outside }}:{{ kafka_exp.ports.plain.inside }}'
+    network_mode: '{{ kafka_exp.docker.network_mode }}'
+    command: >
+      '--kafka.server={{ kafka_exp.commands.server }}',
+      '--web.listen-address=:{{ kafka_exp.ports.plain.outside }}'
+
+

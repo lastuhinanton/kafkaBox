@@ -6,35 +6,46 @@ etc_hosts_path: '/etc/hosts'
 # kafka *********************************** #
 #############################################
 
-kafka_broker_id: "{{ inventory_hostname | regex_replace('node', '') }}"
-
-kafka_memory: '700M'
-kafka_swap: '700M'
-
-ports:
-  plaintext:
-    advertised:
-      outside: '9092'
-      inside: '9092'
-
-kafka_service: "kafka.service"
-kafka_service_path: "/etc/systemd/system"
-
-kafka_log_path: '/var/lib/kafka/data'
-
-kafka_listeners: 'PLAINTEXT://:9092'
-kafka_advertised_listeners: 'PLAINTEXT://{{ inventory_hostname }}:9092' # Узнать подробнее про это поле
-kafka_zookeeper_connect: '{{ inventory_hostname }}:2181'
+kafka:
+  broker_id: "{{ inventory_hostname | regex_replace('node', '') }}"
+  memory: '700M'
+  swap: '700M'
+  ports:
+    plaintext:
+      advertised:
+        outside: '9092'
+        inside: '9092'
+  systemd_service:
+    name: "kafka.service"
+    path: "/etc/systemd/system"
+  log_path: '/var/lib/kafka/data'
+  listeners: 'PLAINTEXT://:9092'
+  advertised_listeners: 'PLAINTEXT://{{ inventory_hostname }}:9092' # Узнать подробнее про это поле
+  zookeeper_connect: '{{ inventory_hostname }}:2181'
+  docker:
+    container_name: 'kafka'
+    image:
+      path: "confluentinc/cp-kafka"
+      version: "5.3.1"
+    network_mode: 'host'
 
 delay_between_nodes: 3
-
-docker:
-  container_name: 'kafka'
-  image:
-    path: "confluentinc/cp-kafka"
-    version: "5.3.1"
-  network_mode: 'host'
+  
 
 #############################################
 # kafka-exporter ************************** #
 #############################################
+
+kafka_exp:
+  docker:
+    container_name: 'kafka_exporter'
+    image:
+      path: 'danielqsj/kafka-exporter'
+      version: 'v1.5.0'
+    network_mode: 'host'
+  ports:
+    plain:
+      outside: '9308'
+      inside: '9308'
+  commands:
+    server: '{{ inventory_hostname }}:9092'
