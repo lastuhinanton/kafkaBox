@@ -41,7 +41,7 @@ kafka_exp:
     container_name: 'kafka_exporter'
     image:
       path: 'danielqsj/kafka-exporter'
-      version: 'v1.5.0'
+      version: 'v1.9.0'
     network_mode: 'host'
   ports:
     plain:

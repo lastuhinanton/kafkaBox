@@ -2,9 +2,12 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
+  - job_name: 'kafka_exporter'
+    static_configs:
+      - targets: ['node1:{{ kafka_exp_port }}', 'node2:{{ kafka_exp_port }}', 'node3:{{ kafka_exp_port }}']
   - job_name: 'zookeeper_exporter'
     static_configs:
-      - targets: ['node1:{{ zk_port }}', 'node2:{{ zk_port }}', 'node3:{{ zk_port }}']
+      - targets: ['node1:{{ zk_exp_port }}', 'node2:{{ zk_exp_port }}', 'node3:{{ zk_exp_port }}']
   - job_name: 'node_exporter'
     static_configs:
       - targets: ['node1:{{ node_exp_outside_port }}', 'node2:{{ node_exp_outside_port }}', 'node3:{{ node_exp_outside_port }}', 'node4:{{ node_exp_outside_port }}']
