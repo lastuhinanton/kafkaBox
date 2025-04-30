@@ -88,10 +88,32 @@
         published_ports:
           - '{{ grafana_inside_port }}:{{ grafana_outside_port }}'
         volumes:
-          - '{{ grafana_data_path }}:{{ grafana_data_path }}:rw'
+          - '{{ grafana_data_path }}:{{ grafana_data_path }}'
           - '{{ etc_hosts_path }}:{{ etc_hosts_path }}'
         env:
           GF_SECURITY_ADMIN_USER: '{{ grafana_user }}'
           GF_SECURITY_ADMIN_PASSWORD: '{{ grafana_password }}'
           GF_PATHS_DATA: '{{ grafana_data_path }}'
   when: monitoring in ['grafana', 'all']
+
+
+########################################################
+# * Kafka-ui ***************************************** #
+########################################################
+
+- name: Kafka-ui
+  block:
+    - name: Run Kafka-ui
+      community.docker.docker_container:
+        name: kafka_ui
+        image: '{{ kafka_ui.image.path }}:{{ kafka_ui.image.version }}'
+        state: started
+        recreate: true
+        published_ports:
+          - '{{ kafka_ui.ports.outside }}:{{ kafka_ui.ports.inside }}'
+        volumes:
+          - '{{ etc_hosts_path }}:{{ etc_hosts_path }}'
+        env:
+          KAFKA_CLUSTERS_0_NAME: '{{ kafka_ui.clusters.zero.name }}'
+          KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: '{{ kafka_ui.clusters.zero.bootstrap_servers }}'
+  when: monitoring in ['kafka_ui', 'all']

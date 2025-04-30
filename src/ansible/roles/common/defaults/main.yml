@@ -72,3 +72,20 @@ zk_exp_port: '9141'
 #############################################
 
 kafka_exp_port: '9308'
+
+
+#############################################
+# kafka-ui ******************************** #
+#############################################
+
+kafka_ui:
+  image:
+    path: 'provectuslabs/kafka-ui'
+    version: 'v0.6.2'
+  ports:
+    inside: '8080'
+    outside: '8080'
+  clusters:
+    zero:
+      name: 'local'
+      bootstrap_servers: 'node1:9092,node2:9092,node3:9092'

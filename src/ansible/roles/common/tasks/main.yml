@@ -9,4 +9,4 @@
 
 - name: Install Monitoring
   include_tasks: install_monitoring.yml
-  when: goal in ['install_monitoring'] and monitoring in ['victoriametrics', 'vmagent', 'grafana', 'all']
+  when: goal in ['install_monitoring'] and monitoring in ['victoriametrics', 'vmagent', 'grafana', 'kafka_ui', 'all']
