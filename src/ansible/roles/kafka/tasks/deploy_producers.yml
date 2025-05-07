@@ -1,0 +1,27 @@
+---
+- name: Copy producer directory
+  copy:
+    src: '{{ (playbook_dir + "/../kafka-producer-java") }}'
+    dest: '/'
+
+- name: Build producer docker image
+  community.docker.docker_image:
+    name: kafka-producer-java
+    build:
+      path: '/kafka-producer-java'
+    source: build
+    tag: latest
+
+- name: Run kafka-producer-java
+  community.docker.docker_container:
+    name: 'kafka-producer-java-{{ item }}'
+    image: kafka-producer-java:latest
+    state: started
+    env:
+      BOOTSTRAP_SERVERS: 'node1:9092,node2:9092,node3:9092'
+      TOPIC: 'ansible-topic'
+      INTERVAL_MS: '5000'
+    volumes:
+      - '/etc/hosts:/etc/hosts'
+    restart_policy: always
+  loop: '{{ range(1, (producers_count | int) + 1) | list }}'

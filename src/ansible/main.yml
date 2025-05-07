@@ -16,4 +16,4 @@
   - name: "Kafka tasks | Zookeeper version"
     include_role:
       name: kafka
-    when: goal in ['kafka_2_1']
+    when: goal in ['kafka_2_1', 'deploy_producers']

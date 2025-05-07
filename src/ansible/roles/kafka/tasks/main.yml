@@ -1,34 +1,42 @@
 ---
-- name: "Add variables"
-  include_vars:
-   file: "{{ playbook_dir }}/roles/kafka/defaults/kafka.service.yml"
-
-- name: "Create directories"
-  file:
-    path: "{{ item }}"
-    state: directory
-    mode: "0777"
-  loop:
-    - "{{ kafka.log_path }}"
-
-- name: "Backup files if those will be changed"
-  include_tasks:
-    file: backup_and_push.yml
-  loop:
-    - name: "{{ kafka.systemd_service.name }}"
-      path: "{{ kafka.systemd_service.path }}"
-
-- name: 'Restarted services with {{ delay_between_nodes }}s delay'
+- name: Install kafka
   block:
-    - name: "Restarted a {{ kafka.systemd_service.name }}"
-      systemd_service:
-        state: restarted
-        daemon_reload: true
-        name: "{{ kafka.systemd_service.name }}"
-    - name: 'Run kafka_exporter'
+    - name: "Add variables"
+      include_vars:
+        file: "{{ playbook_dir }}/roles/kafka/defaults/kafka.service.yml"
+
+    - name: "Create directories"
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0777"
+      loop:
+        - "{{ kafka.log_path }}"
+
+    - name: "Backup files if those will be changed"
       include_tasks:
-        file: 'install_kafka_exporter.yml'
-    - name: "Wait {{ delay_between_nodes}} between nodes"
-      pause:
-        seconds: "{{ delay_between_nodes }}"
+        file: backup_and_push.yml
+      loop:
+        - name: "{{ kafka.systemd_service.name }}"
+          path: "{{ kafka.systemd_service.path }}"
+
+    - name: 'Restarted services with {{ delay_between_nodes }}s delay'
+      block:
+        - name: "Restarted a {{ kafka.systemd_service.name }}"
+          systemd_service:
+            state: restarted
+            daemon_reload: true
+            name: "{{ kafka.systemd_service.name }}"
+        - name: 'Run kafka_exporter'
+          include_tasks:
+            file: 'install_kafka_exporter.yml'
+        - name: "Wait {{ delay_between_nodes}} between nodes"
+          pause:
+            seconds: "{{ delay_between_nodes }}"
+  when: goal in ['kafka_2_1']
+
+- name: 'Deploy producers'
+  include_tasks:
+    file: 'deploy_producers.yml'
+  when: goal in ['deploy_producers'] and (producers_count | int) != 0
 
