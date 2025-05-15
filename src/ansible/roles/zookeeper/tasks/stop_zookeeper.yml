@@ -1,0 +1,13 @@
+---
+
+- name: "Restarted services with {{ delay_between_nodes }} delay"
+  block:
+  - name: "Stop .service"
+    systemd_service:
+      state: 'stopped'
+      name: "{{ zk_service }}"
+
+  - name: 'Stop zookeeper_exporter'
+    community.docker.docker_container:
+      name: '{{ zk_exp_name }}'
+      state: 'absent'

@@ -5,21 +5,32 @@ kafka_args:
   volumes:
     kafka_log_path: '{{ kafka.log_path }}:{{ kafka.log_path }}'
     etc_hosts: '{{ etc_hosts_path }}:{{ etc_hosts_path }}'
+    jaas_config: '{{ kafka.jaas_config.path }}/{{ kafka.jaas_config.name }}:{{ kafka.jaas_config.path }}/{{ kafka.jaas_config.name }}'
   flags:
+    CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
     KAFKA_BROKER_ID: "{{ kafka.broker_id }}"
     KAFKA_LOG_DIRS: '{{ kafka.log_path }}'
     KAFKA_LISTENERS: '{{ kafka.listeners }}'
     KAFKA_ADVERTISED_LISTENERS: '{{ kafka.advertised_listeners }}'
     KAFKA_ZOOKEEPER_CONNECT: '{{ kafka.zookeeper_connect }}'
+    KAFKA_SECURITY_INTER_BROKER_PROTOCOL: 'SASL_PLAINTEXT'
+    KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: 'PLAIN'
+    KAFKA_SASL_ENABLED_MECHANISMS: 'PLAIN'
+    KAFKA_AUTHORIZER_CLASS_NAME: 'kafka.security.auth.SimpleAclAuthorizer'
+    KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: 'false'
+    KAFKA_SUPER_USERS: 'User:kafka'
+    KAFKA_OPTS: '"-Djava.security.auth.login.config={{ kafka.jaas_config.path }}/{{ kafka.jaas_config.name }}"'
   network_mode: '{{ kafka.docker.network_mode }}'
   image:
     path: '{{ kafka.docker.image.path }}'
     version: '{{ kafka.docker.image.version }}'
   ports:
-    plaintext:
-      advertised:
-        outside: '{{ kafka.ports.plaintext.advertised.outside }}'
-        inside: '{{ kafka.ports.plaintext.advertised.inside }}'
+    sasl:
+      outside: '{{ kafka.ports.sasl.outside }}'
+      inside: '{{ kafka.ports.sasl.inside }}'
+    monitoring:
+      outside: '{{ kafka.ports.monitoring.outside }}'
+      inside: '{{ kafka.ports.monitoring.inside }}'
 
 
 # docker_arguments:

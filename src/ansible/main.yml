@@ -6,14 +6,14 @@
   - name: "Common tasks"
     include_role:
       name: common
-    when: goal in ['init_host', 'install_monitoring', 'install_zk_exporter']
+    when: goal in ['init_host', 'install_monitoring']
   
   - name: "Zookeeper tasks"
     include_role:
       name: zookeeper
-    when: goal in ['install_zookeeper']
+    when: goal in ['install_zookeeper', 'stop_zookeeper', 'critical_stop']
 
   - name: "Kafka tasks | Zookeeper version"
     include_role:
       name: kafka
-    when: goal in ['kafka_2_1', 'deploy_producers']
+    when: goal in ['kafka_2_1', 'deploy_producers', 'stop_kafka', 'critical_stop']

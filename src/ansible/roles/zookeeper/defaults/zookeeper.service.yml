@@ -2,8 +2,8 @@ zk_args:
   memmory: '{{ zk_memmory }}'
   memmory_swap: '{{ zk_swap }}'
   volumes:
-    zk_data_dir: '/{{ zk_data_dir }}:/{{ zk_data_dir }}'
-    zk_log_dir: '/{{ zk_log_dir }}:/{{ zk_log_dir }}'
+    zk_data_dir: '{{ zk_data_dir }}:{{ zk_data_dir }}'
+    zk_log_dir: '{{ zk_log_dir }}:{{ zk_log_dir }}'
     etc_host_path: '{{ etc_hosts_path }}:{{ etc_hosts_path }}'
   flags:
     ZOOKEEPER_CLIENT_PORT: '{{ zk_client_port }}'
@@ -11,6 +11,7 @@ zk_args:
     ZOOKEEPER_DATA_LOG_DIR: '{{ zk_log_dir }}'
     ZOOKEEPER_SERVER_ID: "{{ inventory_hostname | regex_replace('node', '') }}"
     ZOOKEEPER_SERVERS: '{{ zk_servers.one }}:2888:3888;{{ zk_servers.two }}:2888:3888;{{ zk_servers.three }}:2888:3888'
+    KAFKA_OPTS: '"{{ a }} {{ b }} {{ c }} {{ d }} {{ e }} {{ f }} {{ g }} {{ h }} {{ m }} {{ n }}"'
 
   container_name: '{{ zk_name }}'
   network_mode: '{{ docker.network_mode }}'

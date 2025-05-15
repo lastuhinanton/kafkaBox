@@ -9,5 +9,5 @@
       - '{{ kafka_exp.ports.plain.outside }}:{{ kafka_exp.ports.plain.inside }}'
     network_mode: '{{ kafka_exp.docker.network_mode }}'
     command: >
-      '--kafka.server={{ inventory_hostname }}:{{ kafka.ports.plaintext.advertised.outside }}'
+      '--kafka.server={{ inventory_hostname }}:{{ kafka.ports.monitoring.outside }}'
       '--web.listen-address=:{{ kafka_exp.ports.plain.outside }}'

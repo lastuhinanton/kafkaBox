@@ -1,0 +1,14 @@
+---
+
+- name: 'Stop services with {{ delay_between_nodes }}s delay'
+  block:
+    - name: "Stop a {{ kafka.systemd_service.name }}"
+      systemd_service:
+        state: 'stopped'
+        name: "{{ kafka.systemd_service.name }}"
+
+    - name: 'Stop kafka_exporter'
+      community.docker.docker_container:
+        name: '{{ kafka_exp.docker.container_name }}'
+        state: 'absent'
+

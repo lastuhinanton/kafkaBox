@@ -1,0 +1,33 @@
+---
+
+- name: "Create directories"
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0777"
+  loop:
+    - "{{ kafka.log_path }}"
+    - "{{ kafka.jaas_config.path }}"
+
+- name: "Backup files if those will be changed"
+  include_tasks:
+    file: backup_and_push.yml
+  loop:
+    - name: "{{ kafka.systemd_service.name }}"
+      path: "{{ kafka.systemd_service.path }}"
+    - name: "{{ kafka.jaas_config.name }}"
+      path: "{{ kafka.jaas_config.path }}"
+
+- name: 'Restarted services with {{ delay_between_nodes }}s delay'
+  block:
+    - name: "Restarted a {{ kafka.systemd_service.name }}"
+      systemd_service:
+        state: restarted
+        daemon_reload: true
+        name: "{{ kafka.systemd_service.name }}"
+    - name: 'Run kafka_exporter'
+      include_tasks:
+        file: 'install_kafka_exporter.yml'
+    - name: "Wait {{ delay_between_nodes}} between nodes"
+      pause:
+        seconds: "{{ delay_between_nodes }}"

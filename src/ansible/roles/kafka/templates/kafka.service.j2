@@ -15,7 +15,8 @@ ExecStart=docker run --rm \
 {% endfor %}
   --name {{ kafka_args.container_name }} \
   --net {{ kafka_args.network_mode }} \
-  -p {{ kafka_args.ports.plaintext.advertised.outside }}:{{ kafka_args.ports.plaintext.advertised.inside }} \
+  -p {{ kafka_args.ports.sasl.outside }}:{{ kafka_args.ports.sasl.inside }} \
+  -p {{ kafka_args.ports.monitoring.outside }}:{{ kafka_args.ports.monitoring.inside }} \
   {{ kafka_args.image.path }}:{{ kafka_args.image.version }}
 
 ExecStop=docker stop -t 10 {{ kafka_args.container_name }}

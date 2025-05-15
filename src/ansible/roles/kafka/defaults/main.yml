@@ -11,16 +11,21 @@ kafka:
   memory: '700M'
   swap: '700M'
   ports:
-    plaintext:
-      advertised:
-        outside: '9092'
-        inside: '9092'
+    sasl:
+      outside: '9092'
+      inside: '9092'
+    monitoring:
+      outside: '9093'
+      inside: '9093'
   systemd_service:
     name: "kafka.service"
     path: "/etc/systemd/system"
+  jaas_config:
+    name: 'jaas_kafka_config.conf'
+    path: '/etc/kafka'
   log_path: '/var/lib/kafka/data'
-  listeners: 'PLAINTEXT://:9092'
-  advertised_listeners: 'PLAINTEXT://{{ inventory_hostname }}:9092' # Узнать подробнее про это поле
+  listeners: 'SASL_PLAINTEXT://:9092,PLAINTEXT://:9093'
+  advertised_listeners: 'SASL_PLAINTEXT://{{ inventory_hostname }}:9092,PLAINTEXT://{{ inventory_hostname }}:9093' # Узнать подробнее про это поле
   zookeeper_connect: '{{ inventory_hostname }}:2181'
   docker:
     container_name: 'kafka'
@@ -47,5 +52,3 @@ kafka_exp:
     plain:
       outside: '9308'
       inside: '9308'
-  commands:
-    server: '{{ inventory_hostname }}:9092'

@@ -1,0 +1,33 @@
+---
+- name: "Create directories"
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    mode: "0777"
+  loop:
+    - '{{ zk_data_dir }}'
+    - '{{ zk_log_dir }}'
+
+- name: "Backup files if those will be changed"
+  include_tasks:
+    file: backup_and_push.yml
+  loop:
+  - name: "{{ zk_service }}"
+    path: "{{ zk_service_path }}"
+  - name: "{{ zk_jaas_conf }}"
+    path: "{{ zk_data_dir }}"
+
+- name: "Restarted services with {{ delay_between_nodes }} delay"
+  block:
+  - name: "Restarted .service"
+    systemd_service:
+      state: restarted
+      daemon_reload: true
+      name: "{{ zk_service }}"
+  - name: "Run zookeeper_exporter"
+    include_tasks: install_zk_exporter.yml
+    
+  - name: "Wait {{ delay_between_nodes }} between nodes"
+    pause:
+      seconds: "{{ delay_between_nodes }}"

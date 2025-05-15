@@ -12,6 +12,8 @@ zk_client_port: '2181'
 zk_service: 'zookeeper.service'
 zk_service_path: '/etc/systemd/system'
 
+zk_jaas_conf: 'zookeeper_jaas.conf'
+
 zk_data_dir: '/zookeeper-data'
 zk_log_dir: '/zookeeper-log'
 
@@ -33,6 +35,17 @@ zk_servers:
   one: "node1"
   two: "node2"
   three: "node3"
+
+a: '-Djava.security.auth.login.config={{ zk_data_dir }}/zookeeper_jaas.conf'
+b: '-Dzookeeper.DigestAuthenticationProvider.superDigest={{ zk_data_dir }}/secrets'
+c: '-Dquorum.auth.enableSasl=true'
+d: '-Dquorum.auth.learnerRequireSasl=true'
+e: '-Dquorum.auth.serverRequireSasl=true'
+f: '-Dquorum.cnxn.threads.size=20'
+g: '-DjaasLoginRenew=3600000'
+h: '-DrequireClientAuthScheme=sasl'
+m: '-Dquorum.auth.learner.loginContext=QuorumLearner'
+n: '-Dquorum.auth.server.loginContext=QuorumServer'
 
 #############################################
 # zookeeper-exporter ********************** #
