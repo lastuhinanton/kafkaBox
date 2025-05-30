@@ -17,6 +17,8 @@
     path: "{{ zk_service_path }}"
   - name: "{{ zk_jaas_conf }}"
     path: "{{ zk_data_dir }}"
+  - name: "{{ zk_properties }}"
+    path: "{{ zk_data_dir }}"
 
 - name: "Restarted services with {{ delay_between_nodes }} delay"
   block:

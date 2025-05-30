@@ -13,9 +13,11 @@ zk_service: 'zookeeper.service'
 zk_service_path: '/etc/systemd/system'
 
 zk_jaas_conf: 'zookeeper_jaas.conf'
+zk_properties: 'zookeeper.properties'
 
-zk_data_dir: '/zookeeper-data'
-zk_log_dir: '/zookeeper-log'
+zk_data_dir: '/var/lib/zookeeper/data'
+zk_log_dir: '/var/lib/zookeeper/log'
+confluent_templates_dir: '/etc/confluent/docker'
 
 delay_between_nodes: 3
 
@@ -57,6 +59,3 @@ zk_exp_image_tag: 'latest'
 
 zk_exp_inside_port: '9141'
 zk_exp_outside_port: '9141'
-
-
-

@@ -1,13 +1,20 @@
 ---
 
-- name: "Restarted services with {{ delay_between_nodes }} delay"
+- name: 'Remove everything with zookeeper'
   block:
-  - name: "Stop .service"
+  - name: 'Stop .service'
     systemd_service:
-      state: 'stopped'
-      name: "{{ zk_service }}"
+      state: stopped
+      name: '{{ zk_service }}'
 
   - name: 'Stop zookeeper_exporter'
     community.docker.docker_container:
       name: '{{ zk_exp_name }}'
-      state: 'absent'
+      state: absent
+  
+  - name: 'Delete directories'
+    file:
+      path: '{{ item }}'
+      state: absent
+    loop:
+      - '/var/lib/zookeeper'

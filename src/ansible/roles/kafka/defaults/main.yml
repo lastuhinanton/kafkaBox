@@ -1,6 +1,7 @@
 ---
 
 etc_hosts_path: '/etc/hosts'
+delay_between_nodes: 3
 
 #############################################
 # kafka *********************************** #
@@ -10,6 +11,13 @@ kafka:
   broker_id: "{{ inventory_hostname | regex_replace('node', '') }}"
   memory: '700M'
   swap: '700M'
+  flags:
+    security_inter_broker_protocol: 'SASL_PLAINTEXT'
+    sasl_mechanism_inter_broker_protocol: 'PLAIN'
+    sasl_enabled_mechanisms: 'PLAIN'
+    authorizer_class_name: 'kafka.security.auth.SimpleAclAuthorizer'
+    allow_everyone_if_no_acl_found: 'true'
+    super_users: 'User:kafka'
   ports:
     sasl:
       outside: '9092'
@@ -21,7 +29,7 @@ kafka:
     name: "kafka.service"
     path: "/etc/systemd/system"
   jaas_config:
-    name: 'jaas_kafka_config.conf'
+    name: 'jaas_kafka.conf'
     path: '/etc/kafka'
   log_path: '/var/lib/kafka/data'
   listeners: 'SASL_PLAINTEXT://:9092,PLAINTEXT://:9093'
@@ -34,8 +42,6 @@ kafka:
       version: "5.3.1"
     network_mode: 'host'
 
-delay_between_nodes: 3
-  
 
 #############################################
 # kafka-exporter ************************** #
@@ -52,3 +58,38 @@ kafka_exp:
     plain:
       outside: '9308'
       inside: '9308'
+
+
+#############################################
+# kafka-security-manager ****************** #
+#############################################
+
+ksm:
+  systemd:
+    service_name: 'ksm.service'
+    path: '/etc/systemd/system'
+  docker:
+    container_name: 'kafka-security-manager'
+    image_path: 'simplesteph/kafka-security-manager'
+    image_version: 'v0.8-release'
+  file:
+    jaas_config: 'jaas_ksm.conf'
+    acls_csv: 'acls.csv'
+  paths:
+    data: '/data/kafka-security-manager'
+    docker_example: '/opt/docker/example'
+  env:
+    source_class: 'com.github.simplesteph.ksm.source.FileSourceAcl'
+    source_file_filename: '/opt/docker/example/acls.csv'
+    ksm_readonly: 'false'
+    ksm_extract: 'false'
+    ksm_refresh_frequency_ms: '10000'
+    authorizer_class: 'kafka.security.auth.SimpleAclAuthorizer'
+    authorizer_zookeeper_connect: 'node1:2181,node2:2181,node3:2181'
+    authorizer_zookeeper_set_acl: 'true'
+  network_mode: 'host'
+  memory:
+    mem: '256m'
+    swap: '256m'
+  jaas_option: '-Djava.security.auth.login.config=/data/kafka-security-manager/jaas_ksm.conf'
+

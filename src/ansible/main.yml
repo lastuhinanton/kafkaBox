@@ -13,7 +13,7 @@
       name: zookeeper
     when: goal in ['install_zookeeper', 'stop_zookeeper', 'critical_stop']
 
-  - name: "Kafka tasks | Zookeeper version"
+  - name: "Kafka tasks"
     include_role:
       name: kafka
-    when: goal in ['kafka_2_1', 'deploy_producers', 'stop_kafka', 'critical_stop']
+    when: goal in ['kafka_2_1', 'deploy_producers', 'stop_kafka', 'stop_ksm', 'install_ksm', 'critical_stop']

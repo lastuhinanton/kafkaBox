@@ -27,3 +27,6 @@ all:
     monitoring:
       hosts:
         node4:
+    ksm:
+      hosts:
+        node4:

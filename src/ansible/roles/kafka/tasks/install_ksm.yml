@@ -1,0 +1,28 @@
+---
+
+- name: "Create directories"
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0777"
+  loop:
+    - '{{ ksm.paths.data }}'
+
+- name: "Backup files if those will be changed"
+  include_tasks:
+    file: backup_and_push.yml
+  loop:
+    - name: "{{ ksm.systemd.service_name }}"
+      path: "{{ ksm.systemd.path }}"
+    - name: "{{ ksm.file.jaas_config}}"
+      path: "{{ ksm.paths.data }}"
+    - name: "{{ ksm.file.acls_csv}}"
+      path: "{{ ksm.paths.data }}"
+
+- name: 'Restarted {{ ksm.systemd.service_name }}'
+  block:
+    - name: "Restarted a {{ ksm.systemd.service_name }}"
+      systemd_service:
+        state: restarted
+        daemon_reload: true
+        name: "{{ ksm.systemd.service_name }}"

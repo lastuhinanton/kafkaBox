@@ -4,13 +4,12 @@ zk_args:
   volumes:
     zk_data_dir: '{{ zk_data_dir }}:{{ zk_data_dir }}'
     zk_log_dir: '{{ zk_log_dir }}:{{ zk_log_dir }}'
+    zk_conf_dir: '{{ zk_data_dir }}/{{ zk_properties }}:{{ confluent_templates_dir }}/{{ zk_properties }}.template'
     etc_host_path: '{{ etc_hosts_path }}:{{ etc_hosts_path }}'
   flags:
+    ZOOKEEPER_LOG4J_ROOT_LOGLEVEL: 'INFO'
     ZOOKEEPER_CLIENT_PORT: '{{ zk_client_port }}'
-    ZOOKEEPER_DATA_DIR: '{{ zk_data_dir }}'
-    ZOOKEEPER_DATA_LOG_DIR: '{{ zk_log_dir }}'
     ZOOKEEPER_SERVER_ID: "{{ inventory_hostname | regex_replace('node', '') }}"
-    ZOOKEEPER_SERVERS: '{{ zk_servers.one }}:2888:3888;{{ zk_servers.two }}:2888:3888;{{ zk_servers.three }}:2888:3888'
     KAFKA_OPTS: '"{{ a }} {{ b }} {{ c }} {{ d }} {{ e }} {{ f }} {{ g }} {{ h }} {{ m }} {{ n }}"'
 
   container_name: '{{ zk_name }}'

@@ -1,0 +1,16 @@
+---
+
+- name: 'Stop {{ ksm.systemd.service_name }}'
+  block:
+    - name: "Stop a {{ ksm.systemd.service_name }}"
+      systemd_service:
+        state: 'stopped'
+        name: '{{ ksm.systemd.service_name }}'
+  
+    - name: 'Delete directories'
+      file:
+        path: '{{ item }}'
+        state: absent
+      loop:
+        - '{{ ksm.paths.data }}'
+

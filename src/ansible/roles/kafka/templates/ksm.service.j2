@@ -1,0 +1,25 @@
+[Unit]
+Description=Kafka Security Manager
+
+[Service]
+Restart=always
+ExecStartPre=docker rm -f {{ ksm_args.docker.container_name }} || True
+ExecStart=docker run --rm \
+  --memory={{ ksm_args.memory.mem }} \
+  --memory-swap={{ ksm_args.memory.swap }} \
+{% for v_value in ksm_args.volumes.values() %}
+  -v {{ v_value }} \
+{% endfor %}
+{% for env_key, env_value in ksm_args.env.items() %}
+  -e {{ env_key }}={{ env_value }} \
+{% endfor %}
+  --name {{ ksm_args.docker.container_name }} \
+  --net {{ ksm_args.network_mode }} \
+  {{ ksm_args.docker.image_path }}:{{ ksm_args.docker.image_version }} \
+  {{ ksm_args.jaas_option }}
+
+ExecStop=docker stop -t 10 {{ ksm_args.docker.container_name }}
+
+[Install]
+WantedBy=multi-user.target
+

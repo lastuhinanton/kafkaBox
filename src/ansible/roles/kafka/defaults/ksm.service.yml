@@ -1,0 +1,24 @@
+ksm_args:
+  docker:
+    container_name: '{{ ksm.docker.container_name }}'
+    image_path: '{{ ksm.docker.image_path }}'
+    image_version: '{{ ksm.docker.image_version }}'
+  volumes:
+    jaas_config: '{{ ksm.paths.data }}/{{ ksm.file.jaas_config }}:{{ ksm.paths.data }}/{{ ksm.file.jaas_config }}'
+    acls_csv: '{{ ksm.paths.data }}/{{ ksm.file.acls_csv }}:{{ ksm.paths.docker_example }}/{{ ksm.file.acls_csv }}'
+    etc_hosts: '{{ etc_hosts_path }}:{{ etc_hosts_path }}'
+  env:
+    SOURCE_CLASS: '{{ ksm.env.source_class }}'
+    SOURCE_FILE_FILENAME: '{{ ksm.env.source_file_filename }}'
+    KSM_READONLY: '{{ ksm.env.ksm_readonly }}'
+    KSM_EXTRACT: '{{ ksm.env.ksm_extract }}'
+    KSM_REFRESH_FREQUENCY_MS: '{{ ksm.env.ksm_refresh_frequency_ms }}'
+    AUTHORIZER_CLASS: '{{ ksm.env.authorizer_class }}'
+    AUTHORIZER_ZOOKEEPER_CONNECT: '{{ ksm.env.authorizer_zookeeper_connect }}'
+    AUTHORIZER_ZOOKEEPER_SET_ACL: '{{ ksm.env.authorizer_zookeeper_set_acl }}'
+  network_mode: '{{ ksm.network_mode }}'
+  memory:
+    mem: '{{ ksm.memory.mem }}'
+    swap: '{{ ksm.memory.swap }}'
+  jaas_option: '{{ ksm.jaas_option }}'
+

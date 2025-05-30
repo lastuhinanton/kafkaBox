@@ -1,8 +1,12 @@
 ---
 
-- name: "Add variables"
+- name: "Add kafka service variables"
   include_vars:
     file: "{{ playbook_dir }}/roles/kafka/defaults/kafka.service.yml"
+
+- name: "Add kafka-security-manager variables"
+  include_vars:
+    file: "{{ playbook_dir }}/roles/kafka/defaults/ksm.service.yml"
 
 - name: 'Install kafka'
   include_tasks:
@@ -13,8 +17,16 @@
   include_tasks: stop_kafka.yml
   when: goal in ['stop_kafka', 'critical_stop']
 
+- name: "Stop ksm"
+  include_tasks: stop_ksm.yml
+  when: goal in ['stop_ksm']
+
 - name: 'Deploy producers'
   include_tasks:
     file: 'deploy_producers.yml'
   when: goal in ['deploy_producers'] and (producers_count | int) != 0
 
+- name: 'Install KSM'
+  include_tasks:
+    file: 'install_ksm.yml'
+  when: goal in ['install_ksm']
